@@ -64,23 +64,23 @@ In short, ARMOUR requests the minimum supported sampling rates of zero-permissio
 </div>
 
 
+### 📦 Installation
 
+You can either install the prebuilt APK or build the project from source:
 
-### 📦 Installation (need to update)
+#### 🔹 Option 1: Install Prebuilt APK
+Download and install the APK from the [Releases page](https://github.com/longyan97/ARMOUR/releases/tag/v1.0).
 
-0. Directly install the APK release at: xxx (TBA). Or...
+#### 🔹 Option 2: Build from Source
+
 1. Clone the repository:
    ```bash
    git clone https://github.com/yourusername/armour.git
-   ```
 2. Open the project in Android Studio.
 3. Ensure you have the necessary SDK and API levels installed:
    - Minimum SDK version: 29
    - Target SDK version: 34
    - Compile API Level: 35
-
-
-
 
 ### ➤ Step 1: Device Profiling
 
