@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- Text Sizes -->
+    <dimen name="text_xs">10sp</dimen>        <!-- Caption2 / footnotes -->
+    <dimen name="text_sm">12sp</dimen>        <!-- Caption1 -->
+    <dimen name="text_md">14sp</dimen>        <!-- Subheadline -->
+    <dimen name="size_component_header">14sp</dimen>        <!-- Caption1 -->
+    <dimen name="text_lg">13sp</dimen>        <!-- Body -->
+    <dimen name="size_component_content">16sp</dimen>        <!-- Body -->
+    <dimen name="text_xl">18sp</dimen>        <!-- Callout / Headline -->
+    <dimen name="text_2xl">20sp</dimen>       <!-- Title3 -->
+    <dimen name="text_3xl">24sp</dimen>       <!-- Title2 -->
+    <dimen name="size_header">28sp</dimen>       <!-- Larger Title -->
+    <dimen name="text_4xl">32sp</dimen>       <!-- Large Title1 -->
+    <dimen name="text_display">40sp</dimen>   <!-- Extra Large Title -->
+
+    <!-- Spacing Units (8dp Grid System) -->
+    <dimen name="spacing_xs">4dp</dimen>      <!-- 0.5x base -->
+    <dimen name="spacing_sm">8dp</dimen>      <!-- 1x base -->
+    <dimen name="spacing_component_header">8dp</dimen>
+    <dimen name="spacing_md">12dp</dimen>     <!-- 1.5x base -->
+    <dimen name="spacing_inner_border">12dp</dimen>
+    <dimen name="spacing_lg">16dp</dimen>     <!-- 2x base -->
+    <dimen name="spacing_inner_component">16dp</dimen>
+    <dimen name="spacing_component">20dp</dimen>
+    <dimen name="spacing_xl">24dp</dimen>     <!-- 3x base -->
+    <dimen name="spacing_border">24dp</dimen>
+    <dimen name="spacing_2xl">32dp</dimen>    <!-- 4x base -->
+    <dimen name="spacing_header">32dp</dimen>
+    <dimen name="spacing_3xl">40dp</dimen>    <!-- 5x base -->
+    <dimen name="spacing_4xl">48dp</dimen>    <!-- 6x base -->
+
+    <!-- Compact Spacing Units (for tighter layouts) -->
+    <dimen name="spacing_compact_xs">2dp</dimen>      <!-- Extra small compact -->
+    <dimen name="spacing_compact_sm">4dp</dimen>      <!-- Small compact -->
+    <dimen name="spacing_compact_md">6dp</dimen>      <!-- Medium compact -->
+    <dimen name="spacing_compact_lg">8dp</dimen>      <!-- Large compact -->
+    <dimen name="spacing_compact_xl">12dp</dimen>     <!-- Extra large compact -->
+    <dimen name="spacing_compact_2xl">16dp</dimen>    <!-- 2x extra large compact -->
+    <dimen name="spacing_compact_border">16dp</dimen> <!-- Compact border spacing -->
+
+    <!-- Corner Radius -->
+    <dimen name="corner_radius_sm">4dp</dimen>
+    <dimen name="corner_radius_md">8dp</dimen>
+    <dimen name="corner_radius_lg">12dp</dimen>
+    <dimen name="corner_radius_xl">16dp</dimen>
+    <dimen name="corner_radius_2xl">20dp</dimen>
+
+    <!-- Common UI Elements -->
+    <dimen name="button_height">60dp</dimen>              <!-- Increased to prevent text occlusion -->
+    <dimen name="button_font_size">16sp</dimen>
+    <dimen name="button_min_width">120dp</dimen>          <!-- Minimum button width -->
+    <dimen name="button_padding_horizontal">24dp</dimen>  <!-- Horizontal padding for buttons -->
+    <dimen name="button_padding_vertical">18dp</dimen>    <!-- Increased vertical padding -->
+
+    <dimen name="item_height">60dp</dimen>                <!-- Increased for better touch target -->
+    <dimen name="list_item_height">72dp</dimen>           <!-- For list items with more content -->
+
+    <dimen name="digital_edit_text_width">80dp</dimen>    <!-- Increased width for better usability -->
+    <dimen name="divider_height">1dp</dimen>              <!-- Slightly thicker for visibility -->
+    <dimen name="card_elevation">6dp</dimen>              <!-- Increased for better depth -->
+    <dimen name="card_elevation_small">2dp</dimen>        <!-- For subtle elevation -->
+    <dimen name="card_elevation_large">8dp</dimen>        <!-- For prominent elements -->
+
+    <dimen name="input_height">60dp</dimen>               <!-- Increased for better usability -->
+    <dimen name="toolbar_height">64dp</dimen>             <!-- Increased for better proportion -->
+    
+    <!-- Icon Sizes -->
+    <dimen name="icon_size_small">16dp</dimen>
+    <dimen name="icon_size_medium">24dp</dimen>
+    <dimen name="icon_size_large">32dp</dimen>
+    <dimen name="icon_size_xlarge">48dp</dimen>
+    
+    <!-- Avatar/Profile Image Sizes -->
+    <dimen name="avatar_size_small">32dp</dimen>
+    <dimen name="avatar_size_medium">48dp</dimen>
+    <dimen name="avatar_size_large">64dp</dimen>
+    
+    <!-- Minimum Touch Target -->
+    <dimen name="min_touch_target">48dp</dimen>
+    
+    <!-- Line Heights -->
+    <dimen name="line_height_small">20sp</dimen>
+    <dimen name="line_height_medium">24sp</dimen>
+    <dimen name="line_height_large">28sp</dimen>
+
+    <!-- Slogan Text Sizes -->
+    <dimen name="slogan_part1_text">20sp</dimen>      <!-- "They've been" - single line -->
+    <dimen name="slogan_part2_text">22sp</dimen>      <!-- "Now it's time" - two lines -->
+    <dimen name="slogan_text_min">8sp</dimen>         <!-- Minimum size -->
+
+</resources>

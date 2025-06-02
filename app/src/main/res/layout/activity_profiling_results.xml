@@ -1,0 +1,366 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ProfilingResultsActivity">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingBottom="@dimen/spacing_compact_2xl">
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/minimumRatesSummaryCard"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/spacing_compact_2xl"
+            android:layout_marginTop="@dimen/spacing_compact_xl"
+            android:layout_marginEnd="@dimen/spacing_compact_2xl"
+            app:cardCornerRadius="8dp"
+            app:cardElevation="4dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="@dimen/spacing_compact_2xl">
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentStart="true"
+                        android:layout_centerVertical="true"
+                        android:text="Minimum Supported Sampling Rates"
+                        android:textSize="16sp"
+                        android:textStyle="bold"
+                        android:textColor="@android:color/black" />
+
+                </RelativeLayout>
+
+                <TextView
+                    android:id="@+id/accelerometerMinRateLabel"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/spacing_compact_lg"
+                    android:textSize="14sp"
+                    android:lineSpacingExtra="2dp"
+                    tools:text="Accelerometer: 100 Hz (Global: 50 Hz)" />
+
+                <TextView
+                    android:id="@+id/gyroscopeMinRateLabel"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/spacing_compact_sm"
+                    android:lineSpacingExtra="2dp"
+                    android:textSize="14sp"
+                    tools:text="Gyroscope: 200 Hz (Global: 100 Hz)" />
+
+                <TextView
+                    android:id="@+id/magnetometerMinRateLabel"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/spacing_compact_sm"
+                    android:textSize="14sp"
+                    android:lineSpacingExtra="2dp"
+                    tools:text="Magnetometer: 50 Hz (Global: 20 Hz)" />
+
+                <Button
+                    android:id="@+id/saveGlobalSettingsButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="36dp"
+                    android:backgroundTint="@android:color/holo_blue_dark"
+                    android:padding="@dimen/spacing_compact_sm"
+                    android:text="Save as Global"
+                    android:textSize="12sp" />
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
+
+        <TextView
+            android:id="@+id/summaryTextView"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/spacing_compact_2xl"
+            android:layout_marginTop="@dimen/spacing_compact_xl"
+            android:layout_marginEnd="@dimen/spacing_compact_2xl"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:text="Sample Rate Selection"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/minimumRatesSummaryCard" />
+
+        <HorizontalScrollView
+            android:id="@+id/rateScrollView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/spacing_compact_lg"
+            app:layout_constraintTop_toBottomOf="@+id/summaryTextView">
+
+            <com.google.android.material.chip.ChipGroup
+                android:id="@+id/rateChipGroup"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/spacing_compact_2xl"
+                android:layout_marginEnd="@dimen/spacing_compact_2xl"
+                app:singleSelection="true" />
+        </HorizontalScrollView>
+
+        <LinearLayout
+            android:id="@+id/sensorsContainer"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/spacing_compact_xl"
+            android:orientation="vertical"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/rateScrollView">
+
+            <!-- Accelerometer Section -->
+            <androidx.cardview.widget.CardView
+                android:id="@+id/accelerometerCard"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/spacing_compact_2xl"
+                android:layout_marginTop="@dimen/spacing_compact_lg"
+                android:layout_marginEnd="@dimen/spacing_compact_2xl"
+                app:cardCornerRadius="12dp"
+                app:cardElevation="8dp"
+                app:cardBackgroundColor="@android:color/white">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="@dimen/spacing_compact_2xl">
+
+                    <TextView
+                        android:id="@+id/accelerometerTitleTextView"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:paddingBottom="@dimen/spacing_compact_lg"
+                        android:text="Accelerometer Results"
+                        android:textColor="@android:color/holo_blue_dark"
+                        android:textSize="18sp"
+                        android:textStyle="bold" />
+
+                    <androidx.cardview.widget.CardView
+                        android:id="@+id/accelerometerStatsCard"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="2dp"
+                        app:cardCornerRadius="8dp"
+                        app:cardElevation="2dp"
+                        app:cardBackgroundColor="@android:color/white">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            android:padding="@dimen/spacing_compact_xl">
+
+                            <TextView
+                                android:id="@+id/accelerometerRequestedRateLabel"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:textSize="16sp"
+                                android:textStyle="bold"
+                                tools:text="Requested: 100 Hz" />
+
+                            <TextView
+                                android:id="@+id/accelerometerActualRateLabel"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="@dimen/spacing_compact_sm"
+                                android:textSize="16sp"
+                                android:textStyle="bold"
+                                tools:text="Actual (avg): 98.7 Hz" />
+
+                            <TextView
+                                android:id="@+id/accelerometerMinMaxLabel"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="@dimen/spacing_compact_sm"
+                                tools:text="Range: 95.2 Hz - 102.1 Hz" />
+                        </LinearLayout>
+                    </androidx.cardview.widget.CardView>
+
+                    <com.jjoe64.graphview.GraphView
+                        android:id="@+id/accelerometerGraph"
+                        android:layout_width="match_parent"
+                        android:layout_height="150dp"
+                        android:layout_marginTop="@dimen/spacing_compact_xl" />
+
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+
+            <!-- Gyroscope Section -->
+            <androidx.cardview.widget.CardView
+                android:id="@+id/gyroscopeCard"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/spacing_compact_2xl"
+                android:layout_marginTop="@dimen/spacing_compact_xl"
+                android:layout_marginEnd="@dimen/spacing_compact_2xl"
+                app:cardCornerRadius="12dp"
+                app:cardElevation="8dp"
+                app:cardBackgroundColor="@android:color/white">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="@dimen/spacing_compact_2xl">
+
+                    <TextView
+                        android:id="@+id/gyroscopeTitleTextView"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Gyroscope Results"
+                        android:textSize="18sp"
+                        android:textStyle="bold"
+                        android:textColor="@android:color/holo_green_dark"
+                        android:paddingBottom="@dimen/spacing_compact_lg" />
+
+                    <androidx.cardview.widget.CardView
+                        android:id="@+id/gyroscopeStatsCard"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="2dp"
+
+                        app:cardCornerRadius="8dp"
+                        app:cardElevation="2dp"
+                        app:cardBackgroundColor="@android:color/white">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            android:padding="@dimen/spacing_compact_xl">
+
+                            <TextView
+                                android:id="@+id/gyroscopeRequestedRateLabel"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:textSize="16sp"
+                                android:textStyle="bold"
+                                tools:text="Requested: 100 Hz" />
+
+                            <TextView
+                                android:id="@+id/gyroscopeActualRateLabel"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="@dimen/spacing_compact_sm"
+                                android:textSize="16sp"
+                                android:textStyle="bold"
+                                tools:text="Actual (avg): 98.7 Hz" />
+
+                            <TextView
+                                android:id="@+id/gyroscopeMinMaxLabel"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="@dimen/spacing_compact_sm"
+                                tools:text="Range: 95.2 Hz - 102.1 Hz" />
+                        </LinearLayout>
+                    </androidx.cardview.widget.CardView>
+
+                    <com.jjoe64.graphview.GraphView
+                        android:id="@+id/gyroscopeGraph"
+                        android:layout_width="match_parent"
+                        android:layout_height="150dp"
+                        android:layout_marginTop="@dimen/spacing_compact_xl" />
+
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+
+            <!-- Magnetometer Section -->
+            <androidx.cardview.widget.CardView
+                android:id="@+id/magnetometerCard"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/spacing_compact_2xl"
+                android:layout_marginTop="@dimen/spacing_compact_xl"
+                android:layout_marginEnd="@dimen/spacing_compact_2xl"
+                android:layout_marginBottom="@dimen/spacing_compact_2xl"
+                app:cardCornerRadius="12dp"
+                app:cardElevation="8dp"
+                app:cardBackgroundColor="@android:color/white">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="@dimen/spacing_compact_2xl">
+
+                    <TextView
+                        android:id="@+id/magnetometerTitleTextView"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Magnetometer Results"
+                        android:textSize="18sp"
+                        android:textStyle="bold"
+                        android:textColor="@android:color/holo_red_dark"
+                        android:paddingBottom="@dimen/spacing_compact_lg" />
+
+                    <androidx.cardview.widget.CardView
+                        android:id="@+id/magnetometerStatsCard"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        app:cardCornerRadius="8dp"
+                        android:layout_margin="2dp"
+                        app:cardElevation="2dp"
+                        app:cardBackgroundColor="@android:color/white">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            android:padding="@dimen/spacing_compact_xl">
+
+                            <TextView
+                                android:id="@+id/magnetometerRequestedRateLabel"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:textSize="16sp"
+                                android:textStyle="bold"
+                                tools:text="Requested: 100 Hz" />
+
+                            <TextView
+                                android:id="@+id/magnetometerActualRateLabel"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="@dimen/spacing_compact_sm"
+                                android:textSize="16sp"
+                                android:textStyle="bold"
+                                tools:text="Actual (avg): 98.7 Hz" />
+
+                            <TextView
+                                android:id="@+id/magnetometerMinMaxLabel"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="@dimen/spacing_compact_sm"
+                                tools:text="Range: 95.2 Hz - 102.1 Hz" />
+                        </LinearLayout>
+                    </androidx.cardview.widget.CardView>
+
+                    <com.jjoe64.graphview.GraphView
+                        android:id="@+id/magnetometerGraph"
+                        android:layout_width="match_parent"
+                        android:layout_height="150dp"
+                        android:layout_marginTop="@dimen/spacing_compact_xl" />
+
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+
+        </LinearLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</ScrollView> 

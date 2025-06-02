@@ -1,0 +1,107 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- Base application theme with Material 3 design -->
+    <style name="Theme.ARMOUR" parent="Theme.Material3.Light.NoActionBar">
+        <!-- Primary colors -->
+        <item name="colorPrimary">@color/primary_color</item>
+        <item name="colorOnPrimary">@color/on_primary</item>
+        <item name="colorPrimaryContainer">@color/primary_light</item>
+        <item name="colorOnPrimaryContainer">@color/primary_dark</item>
+        
+        <!-- Secondary colors -->
+        <item name="colorSecondary">@color/secondary_color</item>
+        <item name="colorOnSecondary">@color/on_secondary</item>
+        <item name="colorSecondaryContainer">@color/secondary_light</item>
+        <item name="colorOnSecondaryContainer">@color/secondary_color</item>
+        
+        <!-- Background colors -->
+        <item name="android:colorBackground">@color/background</item>
+        <item name="colorOnBackground">@color/on_background</item>
+        <item name="colorSurface">@color/surface</item>
+        <item name="colorOnSurface">@color/on_surface</item>
+        
+        <!-- Status bar styling -->
+        <item name="android:statusBarColor">@color/activity_background</item>
+        <item name="android:windowLightStatusBar">true</item>
+        
+        <!-- Navigation bar styling -->
+        <item name="android:navigationBarColor">@color/activity_background</item>
+        <item name="android:windowLightNavigationBar">true</item>
+        
+        <!-- Button styles -->
+        <item name="materialButtonStyle">@style/ARMOUR.Button.Primary</item>
+        
+        <!-- Card styles -->
+        <item name="materialCardViewStyle">@style/ARMOUR.CardView</item>
+    </style>
+    
+    <!-- Primary Button Style -->
+    <style name="ARMOUR.Button.Primary" parent="Widget.Material3.Button">
+        <item name="android:textSize">@dimen/button_font_size</item>
+        <item name="android:textColor">@color/button_text_primary</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="android:letterSpacing">0.02</item>
+        <item name="android:fontFamily">sans-serif-medium</item>
+        <item name="cornerRadius">12dp</item>
+        <item name="android:paddingTop">12dp</item>
+        <item name="android:paddingBottom">12dp</item>
+        <item name="android:paddingStart">@dimen/button_padding_horizontal</item>
+        <item name="android:paddingEnd">@dimen/button_padding_horizontal</item>
+        <item name="android:minHeight">@dimen/button_height</item>
+        <item name="backgroundTint">@color/button_primary</item>
+        <item name="android:stateListAnimator">@null</item>
+        <item name="android:elevation">0dp</item>
+        <item name="rippleColor">@color/primary_light</item>
+    </style>
+    
+    <!-- Secondary Button Style -->
+    <style name="ARMOUR.Button.Secondary" parent="Widget.Material3.Button.OutlinedButton">
+        <item name="android:textSize">@dimen/button_font_size</item>
+        <item name="android:textColor">@color/button_text_secondary</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="android:letterSpacing">0.02</item>
+        <item name="android:fontFamily">sans-serif-medium</item>
+        <item name="cornerRadius">12dp</item>
+        <item name="android:paddingTop">12dp</item>
+        <item name="android:paddingBottom">12dp</item>
+        <item name="android:paddingStart">@dimen/button_padding_horizontal</item>
+        <item name="android:paddingEnd">@dimen/button_padding_horizontal</item>
+        <item name="android:minHeight">@dimen/button_height</item>
+        <item name="android:background">@drawable/button_secondary</item>
+        <item name="android:stateListAnimator">@null</item>
+        <item name="android:elevation">0dp</item>
+        <item name="strokeColor">@color/primary_color</item>
+        <item name="strokeWidth">2dp</item>
+        <item name="rippleColor">@color/brand_light</item>
+    </style>
+    
+    <!-- Card View Style -->
+    <style name="ARMOUR.CardView" parent="Widget.Material3.CardView.Elevated">
+        <item name="cardCornerRadius">16dp</item>
+        <item name="cardElevation">@dimen/card_elevation</item>
+        <item name="cardBackgroundColor">@color/surface</item>
+        <item name="android:layout_margin">@dimen/spacing_sm</item>
+    </style>
+    
+    <!-- Title Text Style -->
+    <style name="ARMOUR.Text.Title" parent="Widget.Material3.CollapsingToolbar.Large">
+        <item name="android:textSize">@dimen/size_header</item>
+        <item name="android:textColor">@color/title_color</item>
+        <item name="android:fontFamily">sans-serif-light</item>
+        <item name="android:letterSpacing">0.01</item>
+    </style>
+    
+    <!-- Subtitle Text Style -->
+    <style name="ARMOUR.Text.Subtitle" parent="@android:style/TextAppearance.Material.Subhead">
+        <item name="android:textSize">@dimen/size_component_header</item>
+        <item name="android:textColor">@color/subtitle_color</item>
+        <item name="android:fontFamily">sans-serif-medium</item>
+    </style>
+    
+    <!-- Body Text Style -->
+    <style name="ARMOUR.Text.Body" parent="@android:style/TextAppearance.Material.Body1">
+        <item name="android:textSize">@dimen/size_component_content</item>
+        <item name="android:textColor">@color/font_color</item>
+        <item name="android:fontFamily">sans-serif</item>
+        <item name="android:lineSpacingExtra">2dp</item>
+    </style>
+</resources>

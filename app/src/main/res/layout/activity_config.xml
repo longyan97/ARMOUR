@@ -1,0 +1,301 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/activity_background"
+    android:fillViewport="true"
+    tools:context=".ConfigActivity">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/spacing_border">
+
+        <!-- Header Section -->
+        <LinearLayout
+            android:id="@+id/layoutConfigHeader"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:layout_marginTop="@dimen/spacing_lg"
+            android:layout_marginBottom="@dimen/spacing_xl"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent">
+
+            <!-- Page Title -->
+            <TextView
+                android:id="@+id/textViewConfigTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Configuration"
+                android:autoSizeTextType="uniform"
+                android:autoSizeMinTextSize="18sp"
+                android:autoSizeMaxTextSize="28sp"
+                android:autoSizeStepGranularity="1sp"
+                style="@style/ARMOUR.Text.Title"
+                android:layout_marginBottom="@dimen/spacing_sm" />
+
+            <!-- Subtitle -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Manage app settings and preferences"
+                android:autoSizeTextType="uniform"
+                android:autoSizeMinTextSize="12sp"
+                android:autoSizeMaxTextSize="18sp"
+                android:autoSizeStepGranularity="1sp"
+                style="@style/ARMOUR.Text.Subtitle" />
+
+        </LinearLayout>
+
+        <!-- Configuration Options Card -->
+        <androidx.cardview.widget.CardView
+            android:id="@+id/cardConfigOptions"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/spacing_md"
+            android:layout_marginStart="@dimen/spacing_md"
+            android:layout_marginEnd="@dimen/spacing_md"
+            style="@style/ARMOUR.CardView"
+            app:layout_constraintTop_toBottomOf="@id/layoutConfigHeader"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="@dimen/spacing_lg">
+
+                <!-- Clear Storage Button (Primary - Now Blue) -->
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnClearStorage"
+                    android:layout_width="match_parent"
+                    android:layout_height="60dp"
+                    android:layout_marginBottom="@dimen/spacing_lg"
+                    android:text="Clear Storage"
+                    android:textSize="@dimen/button_font_size"
+                    android:autoSizeTextType="uniform"
+                    android:autoSizeMinTextSize="12sp"
+                    android:autoSizeMaxTextSize="@dimen/button_font_size"
+                    android:autoSizeStepGranularity="1sp"
+                    android:textColor="@color/button_text_primary"
+                    android:textAllCaps="false"
+                    android:fontFamily="sans-serif-medium"
+                    android:paddingTop="12dp"
+                    android:paddingBottom="12dp"
+                    app:backgroundTint="@color/button_primary"
+                    app:cornerRadius="12dp"
+                    style="@style/ARMOUR.Button.Primary" />
+
+                <!-- Set Thresholds Button (Primary) -->
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnSetThresholds"
+                    android:layout_width="match_parent"
+                    android:layout_height="60dp"
+                    android:layout_marginBottom="@dimen/spacing_lg"
+                    android:text="Monitoring Thresholds Settings"
+                    android:textSize="@dimen/button_font_size"
+                    android:autoSizeTextType="uniform"
+                    android:autoSizeMinTextSize="12sp"
+                    android:autoSizeMaxTextSize="@dimen/button_font_size"
+                    android:autoSizeStepGranularity="1sp"
+                    android:textColor="@color/button_text_primary"
+                    android:textAllCaps="false"
+                    android:fontFamily="sans-serif-medium"
+                    android:paddingTop="12dp"
+                    android:paddingBottom="12dp"
+                    app:backgroundTint="@color/button_primary"
+                    app:cornerRadius="12dp"
+                    style="@style/ARMOUR.Button.Primary" />
+
+                <!-- About ARMOUR Button (Primary) -->
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnAboutArmour"
+                    android:layout_width="match_parent"
+                    android:layout_height="60dp"
+                    android:text="About ARMOUR App &amp; Research"
+                    android:textSize="@dimen/button_font_size"
+                    android:autoSizeTextType="uniform"
+                    android:autoSizeMinTextSize="12sp"
+                    android:autoSizeMaxTextSize="@dimen/button_font_size"
+                    android:autoSizeStepGranularity="1sp"
+                    android:textColor="@color/button_text_primary"
+                    android:textAllCaps="false"
+                    android:fontFamily="sans-serif-medium"
+                    android:paddingTop="12dp"
+                    android:paddingBottom="12dp"
+                    app:backgroundTint="@color/button_primary"
+                    app:cornerRadius="12dp"
+                    style="@style/ARMOUR.Button.Primary" />
+
+            </LinearLayout>
+
+        </androidx.cardview.widget.CardView>
+
+        <!-- Detection Thresholds Section -->
+        <androidx.cardview.widget.CardView
+            android:id="@+id/cardThresholdsSection"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/spacing_lg"
+            android:layout_marginStart="@dimen/spacing_md"
+            android:layout_marginEnd="@dimen/spacing_md"
+            android:layout_marginBottom="@dimen/spacing_lg"
+            android:visibility="gone"
+            style="@style/ARMOUR.CardView"
+            app:layout_constraintTop_toBottomOf="@id/cardConfigOptions"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent">
+
+            <LinearLayout
+                android:id="@+id/layoutThresholdsSection"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="@dimen/spacing_lg">
+
+                <!-- Section Header -->
+                <TextView
+                    android:id="@+id/textViewThresholds"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/spacing_lg"
+                    android:text="@string/detection_thresholds"
+                    style="@style/ARMOUR.Text.Subtitle"
+                    android:gravity="start" />
+
+                <!-- Thresholds Container with Inner Card -->
+                <androidx.cardview.widget.CardView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:cardCornerRadius="12dp"
+                    app:cardElevation="2dp"
+                    app:cardBackgroundColor="@color/background"
+                    android:layout_marginBottom="@dimen/spacing_lg">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:padding="@dimen/spacing_lg">
+
+                        <!-- Threshold 1 - Accelerometer -->
+                        <com.google.android.material.textfield.TextInputLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="@dimen/spacing_lg"
+                            android:hint="@string/threshold_1"
+                            style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+                            app:boxCornerRadiusTopStart="12dp"
+                            app:boxCornerRadiusTopEnd="12dp"
+                            app:boxCornerRadiusBottomStart="12dp"
+                            app:boxCornerRadiusBottomEnd="12dp"
+                            app:boxStrokeColor="@color/primary_color">
+
+                            <com.google.android.material.textfield.TextInputEditText
+                                android:id="@+id/editAcceThreshold"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:inputType="numberDecimal"
+                                android:textColor="@color/font_color"
+                                android:textSize="@dimen/size_component_content"
+                                android:hint="@string/value_hint"
+                                android:textColorHint="@color/hint_color"
+                                android:maxLines="1"
+                                android:imeOptions="actionNext" />
+
+                        </com.google.android.material.textfield.TextInputLayout>
+
+                        <!-- Threshold 2 - Gyroscope -->
+                        <com.google.android.material.textfield.TextInputLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="@dimen/spacing_lg"
+                            android:hint="@string/threshold_2"
+                            style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+                            app:boxCornerRadiusTopStart="12dp"
+                            app:boxCornerRadiusTopEnd="12dp"
+                            app:boxCornerRadiusBottomStart="12dp"
+                            app:boxCornerRadiusBottomEnd="12dp"
+                            app:boxStrokeColor="@color/primary_color">
+
+                            <com.google.android.material.textfield.TextInputEditText
+                                android:id="@+id/editGyroThreshold"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:inputType="numberDecimal"
+                                android:textColor="@color/font_color"
+                                android:textSize="@dimen/size_component_content"
+                                android:hint="@string/value_hint"
+                                android:textColorHint="@color/hint_color"
+                                android:maxLines="1"
+                                android:imeOptions="actionNext" />
+
+                        </com.google.android.material.textfield.TextInputLayout>
+
+                        <!-- Threshold 3 - Magnetometer -->
+                        <com.google.android.material.textfield.TextInputLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="@dimen/spacing_lg"
+                            android:hint="@string/threshold_3"
+                            style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+                            app:boxCornerRadiusTopStart="12dp"
+                            app:boxCornerRadiusTopEnd="12dp"
+                            app:boxCornerRadiusBottomStart="12dp"
+                            app:boxCornerRadiusBottomEnd="12dp"
+                            app:boxStrokeColor="@color/primary_color">
+
+                            <com.google.android.material.textfield.TextInputEditText
+                                android:id="@+id/editMagnThreshold"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:inputType="numberDecimal"
+                                android:textColor="@color/font_color"
+                                android:textSize="@dimen/size_component_content"
+                                android:hint="@string/value_hint"
+                                android:textColorHint="@color/hint_color"
+                                android:maxLines="1"
+                                android:imeOptions="actionDone" />
+
+                        </com.google.android.material.textfield.TextInputLayout>
+
+                    </LinearLayout>
+
+                </androidx.cardview.widget.CardView>
+
+                <!-- Reset Button -->
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnResetThresholds"
+                    android:layout_width="wrap_content"
+                    android:layout_height="60dp"
+                    android:layout_gravity="center_horizontal"
+                    android:text="Reset Thresholds"
+                    android:textSize="@dimen/button_font_size"
+                    android:autoSizeTextType="uniform"
+                    android:autoSizeMinTextSize="12sp"
+                    android:autoSizeMaxTextSize="@dimen/button_font_size"
+                    android:autoSizeStepGranularity="1sp"
+                    android:textColor="@color/button_text_secondary"
+                    android:textAllCaps="false"
+                    android:fontFamily="sans-serif-medium"
+                    android:paddingTop="12dp"
+                    android:paddingBottom="12dp"
+                    app:backgroundTint="@color/button_secondary"
+                    app:strokeColor="@color/secondary_color"
+                    app:strokeWidth="2dp"
+                    app:cornerRadius="12dp"
+                    style="@style/ARMOUR.Button.Secondary" />
+
+            </LinearLayout>
+
+        </androidx.cardview.widget.CardView>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</ScrollView>

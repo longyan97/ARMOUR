@@ -1,0 +1,437 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/activity_background"
+    android:fillViewport="true"
+    tools:context=".ConfigActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="@dimen/spacing_border">
+
+        <!-- Page Title -->
+        <TextView
+            android:id="@+id/textViewConfigThresholds"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Detection Thresholds"
+            android:textColor="@color/title_color"
+            android:textStyle="bold"
+            android:layout_marginTop="@dimen/spacing_header"
+            android:layout_marginBottom="16dp"
+            android:textSize="@dimen/size_header"
+            android:autoSizeTextType="uniform"
+            android:autoSizeMinTextSize="18sp"
+            android:autoSizeMaxTextSize="@dimen/size_header"
+            android:autoSizeStepGranularity="1sp"
+            android:textAlignment="center" />
+
+        <!-- Explanation Text -->
+        <TextView
+            android:id="@+id/textViewExplanation"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/spacing_component"
+            android:text="Threshold = Minimum Rate + Sensitivity Margin\n\nMinimum rates are determined by profiling. Adjust sensitivity margin to fine-tune sensitivity."
+            android:textColor="@color/font_color"
+            android:textSize="14sp"
+            android:autoSizeTextType="uniform"
+            android:autoSizeMinTextSize="10sp"
+            android:autoSizeMaxTextSize="14sp"
+            android:autoSizeStepGranularity="1sp"
+            android:gravity="center" />
+
+        <!-- Accelerometer Section -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/rounded_background"
+            android:orientation="vertical"
+            android:padding="6dp"
+            android:layout_marginBottom="16dp">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Accelerometer"
+                android:textColor="@color/font_color"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:padding="12dp"
+                android:background="@color/component_background" />
+
+            <!-- Min Rate Row -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/item_height"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:paddingStart="@dimen/spacing_inner_border"
+                android:paddingEnd="@dimen/spacing_inner_border">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Minimum Rate (Hz):"
+                    android:textColor="@color/font_color"
+                    android:textSize="@dimen/size_component_content"/>
+
+                <TextView
+                    android:id="@+id/textAcceMinRate"
+                    android:layout_width="@dimen/digital_edit_text_width"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/primary_color"
+                    android:textSize="@dimen/size_component_content"
+                    android:gravity="end|center_vertical"
+                    android:text="5.0" />
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/divider_height"
+                android:layout_marginStart="@dimen/spacing_inner_border"
+                android:layout_marginEnd="@dimen/spacing_inner_border"
+                android:background="@color/divider_color" />
+
+            <!-- Sensitivity Margin Row -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/item_height"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:paddingStart="@dimen/spacing_inner_border"
+                android:paddingEnd="@dimen/spacing_inner_border">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Sensitivity Margin (Hz):"
+                    android:textColor="@color/font_color"
+                    android:textSize="@dimen/size_component_content"/>
+
+                <EditText
+                    android:id="@+id/editAcceBias"
+                    android:layout_width="@dimen/digital_edit_text_width"
+                    android:layout_height="@dimen/item_height"
+                    android:background="@android:color/transparent"
+                    android:inputType="numberDecimal"
+                    android:textColor="@color/primary_color"
+                    android:textSize="@dimen/size_component_content"
+                    android:gravity="end|center_vertical"
+                    android:hint="0.5"
+                    android:textColorHint="@color/hint_color"
+                    android:maxLines="1"
+                    android:imeOptions="actionNext" />
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/divider_height"
+                android:layout_marginStart="@dimen/spacing_inner_border"
+                android:layout_marginEnd="@dimen/spacing_inner_border"
+                android:background="@color/divider_color" />
+
+            <!-- Threshold Row -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/item_height"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:paddingStart="@dimen/spacing_inner_border"
+                android:paddingEnd="@dimen/spacing_inner_border"
+                android:layout_margin="4dp"
+                android:background="@drawable/threshold_row_bg">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Final Threshold (Hz):"
+                    android:textColor="@color/font_color"
+                    android:textSize="@dimen/size_component_content"
+                    android:textStyle="bold"/>
+
+                <TextView
+                    android:id="@+id/textAcceThreshold"
+                    android:layout_width="@dimen/digital_edit_text_width"
+                    android:layout_height="wrap_content"
+                    android:textColor="#FF6F00"
+                    android:textSize="@dimen/size_component_content"
+                    android:textStyle="bold"
+                    android:gravity="end|center_vertical"
+                    android:text="5.5" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <!-- Gyroscope Section -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/rounded_background"
+            android:orientation="vertical"
+            android:padding="6dp"
+            android:layout_marginBottom="16dp">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Gyroscope"
+                android:textColor="@color/font_color"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:padding="12dp"
+                android:background="@color/component_background" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/item_height"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:paddingStart="@dimen/spacing_inner_border"
+                android:paddingEnd="@dimen/spacing_inner_border">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Minimum Rate (Hz):"
+                    android:textColor="@color/font_color"
+                    android:textSize="@dimen/size_component_content"/>
+
+                <TextView
+                    android:id="@+id/textGyroMinRate"
+                    android:layout_width="@dimen/digital_edit_text_width"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/primary_color"
+                    android:textSize="@dimen/size_component_content"
+                    android:gravity="end|center_vertical"
+                    android:text="5.0" />
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/divider_height"
+                android:layout_marginStart="@dimen/spacing_inner_border"
+                android:layout_marginEnd="@dimen/spacing_inner_border"
+                android:background="@color/divider_color" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/item_height"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:paddingStart="@dimen/spacing_inner_border"
+                android:paddingEnd="@dimen/spacing_inner_border">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Sensitivity Margin (Hz):"
+                    android:textColor="@color/font_color"
+                    android:textSize="@dimen/size_component_content"/>
+
+                <EditText
+                    android:id="@+id/editGyroBias"
+                    android:layout_width="@dimen/digital_edit_text_width"
+                    android:layout_height="@dimen/item_height"
+                    android:background="@android:color/transparent"
+                    android:inputType="numberDecimal"
+                    android:textColor="@color/primary_color"
+                    android:textSize="@dimen/size_component_content"
+                    android:gravity="end|center_vertical"
+                    android:hint="0.5"
+                    android:textColorHint="@color/hint_color"
+                    android:maxLines="1"
+                    android:imeOptions="actionNext" />
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/divider_height"
+                android:layout_marginStart="@dimen/spacing_inner_border"
+                android:layout_marginEnd="@dimen/spacing_inner_border"
+                android:background="@color/divider_color" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/item_height"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:layout_margin="4dp"
+                android:paddingStart="@dimen/spacing_inner_border"
+                android:paddingEnd="@dimen/spacing_inner_border"
+                android:background="@drawable/threshold_row_bg">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Final Threshold (Hz):"
+                    android:textColor="@color/font_color"
+                    android:textSize="@dimen/size_component_content"
+                    android:textStyle="bold"/>
+
+                <TextView
+                    android:id="@+id/textGyroThreshold"
+                    android:layout_width="@dimen/digital_edit_text_width"
+                    android:layout_height="wrap_content"
+                    android:textColor="#FF6F00"
+                    android:textSize="@dimen/size_component_content"
+                    android:textStyle="bold"
+                    android:gravity="end|center_vertical"
+                    android:text="5.5" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <!-- Magnetometer Section -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/rounded_background"
+            android:orientation="vertical"
+            android:padding="6dp"
+            android:layout_marginBottom="16dp">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Magnetometer"
+                android:textColor="@color/font_color"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:padding="12dp"
+                android:background="@color/component_background" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/item_height"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:paddingStart="@dimen/spacing_inner_border"
+                android:paddingEnd="@dimen/spacing_inner_border">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Minimum Rate (Hz):"
+                    android:textColor="@color/font_color"
+                    android:textSize="@dimen/size_component_content"/>
+
+                <TextView
+                    android:id="@+id/textMagnMinRate"
+                    android:layout_width="@dimen/digital_edit_text_width"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/primary_color"
+                    android:textSize="@dimen/size_component_content"
+                    android:gravity="end|center_vertical"
+                    android:text="5.0" />
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/divider_height"
+                android:layout_marginStart="@dimen/spacing_inner_border"
+                android:layout_marginEnd="@dimen/spacing_inner_border"
+                android:background="@color/divider_color" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/item_height"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:paddingStart="@dimen/spacing_inner_border"
+                android:paddingEnd="@dimen/spacing_inner_border">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Sensitivity Margin (Hz):"
+                    android:textColor="@color/font_color"
+                    android:textSize="@dimen/size_component_content"/>
+
+                <EditText
+                    android:id="@+id/editMagnBias"
+                    android:layout_width="@dimen/digital_edit_text_width"
+                    android:layout_height="@dimen/item_height"
+                    android:background="@android:color/transparent"
+                    android:inputType="numberDecimal"
+                    android:textColor="@color/primary_color"
+                    android:textSize="@dimen/size_component_content"
+                    android:gravity="end|center_vertical"
+                    android:hint="0.5"
+                    android:textColorHint="@color/hint_color"
+                    android:maxLines="1"
+                    android:imeOptions="actionDone" />
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/divider_height"
+                android:layout_marginStart="@dimen/spacing_inner_border"
+                android:layout_marginEnd="@dimen/spacing_inner_border"
+                android:background="@color/divider_color" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/item_height"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:paddingStart="@dimen/spacing_inner_border"
+                android:paddingEnd="@dimen/spacing_inner_border"
+                android:layout_margin="4dp"
+                android:background="@drawable/threshold_row_bg">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Final Threshold (Hz):"
+                    android:textColor="@color/font_color"
+                    android:textSize="@dimen/size_component_content"
+                    android:textStyle="bold"/>
+
+                <TextView
+                    android:id="@+id/textMagnThreshold"
+                    android:layout_width="@dimen/digital_edit_text_width"
+                    android:layout_height="wrap_content"
+                    android:textColor="#FF6F00"
+                    android:textSize="@dimen/size_component_content"
+                    android:textStyle="bold"
+                    android:gravity="end|center_vertical"
+                    android:text="5.5" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <!-- Reset Button -->
+        <Button
+            android:id="@+id/btnResetThresholds"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/item_height"
+            android:layout_marginTop="@dimen/spacing_component_header"
+            android:layout_marginBottom="@dimen/spacing_border"
+            android:backgroundTint="@color/component_background"
+            android:elevation="0dp"
+            android:text="Reset Sensitivity Margins to Default (0.5)"
+            android:textAllCaps="false"
+            android:textColor="@color/font_color"
+            android:textSize="@dimen/button_font_size"
+            android:autoSizeTextType="uniform"
+            android:autoSizeMinTextSize="10sp"
+            android:autoSizeMaxTextSize="@dimen/button_font_size"
+            android:autoSizeStepGranularity="1sp"
+            app:strokeColor="#A6A6A6"
+            app:strokeWidth="1dp" />
+
+    </LinearLayout>
+
+</ScrollView>

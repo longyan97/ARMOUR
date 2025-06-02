@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Material Design Colors (keeping for compatibility) -->
+    <color name="purple_200">#FFBB86FC</color>
+    <color name="purple_500">#FF6200EE</color>
+    <color name="purple_700">#FF3700B3</color>
+    <color name="teal_200">#FF03DAC5</color>
+    <color name="teal_700">#FF018786</color>
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+
+    <!-- ARMOUR Professional Color Scheme -->
+    <!-- Primary Blue Colors (inspired by screenshot) -->
+    <color name="primary_color">#4A90E2</color>         <!-- Professional Blue -->
+    <color name="primary_dark">#2E5C9A</color>         <!-- Darker Blue -->
+    <color name="primary_light">#7BB3F0</color>        <!-- Lighter Blue -->
+    <color name="primary_variant">#2E5C9A</color>      <!-- Same as primary_dark -->
+    <color name="on_primary">#FFFFFF</color>           <!-- White text on primary -->
+
+    <!-- Secondary Colors -->
+    <color name="secondary_color">#6C7B8B</color>      <!-- Professional Grey-Blue -->
+    <color name="secondary_light">#95A5B8</color>      <!-- Light Grey-Blue -->
+    <color name="on_secondary">#FFFFFF</color>         <!-- White text on secondary -->
+
+    <!-- Background Colors -->
+    <color name="background">#F8FAFC</color>           <!-- Very Light Blue-Grey -->
+    <color name="surface">#FFFFFF</color>              <!-- Pure White for cards -->
+    <color name="on_background">#1A202C</color>        <!-- Dark text on light background -->
+    <color name="on_surface">#1A202C</color>           <!-- Dark text on white surface -->
+
+    <!-- Activity-specific colors -->
+    <color name="activity_background">#F8FAFC</color>  <!-- Same as background -->
+    <color name="component_background">#FFFFFF</color> <!-- White cards/components -->
+    
+    <!-- Text Colors -->
+    <color name="title_color">#1A202C</color>          <!-- Dark for titles -->
+    <color name="subtitle_color">#6C7B8B</color>       <!-- Medium grey for subtitles -->
+    <color name="font_color">#2D3748</color>           <!-- Slightly lighter than title -->
+    <color name="hint_color">#A0AEC0</color>           <!-- Light grey for hints -->
+    
+    <!-- Accent Colors -->
+    <color name="accent_color">#48BB78</color>         <!-- Success Green -->
+    <color name="warning_color">#ED8936</color>        <!-- Warning Orange -->
+    <color name="error_color">#F56565</color>          <!-- Error Red -->
+    
+    <!-- UI Element Colors -->
+    <color name="divider_color">#E2E8F0</color>        <!-- Light divider -->
+    <color name="border_color">#CBD5E0</color>         <!-- Light border -->
+    <color name="shadow_color">#1A202C20</color>       <!-- 20% opacity dark shadow -->
+    
+    <!-- Brand Colors -->
+    <color name="brand_color">#4A90E2</color>          <!-- Same as primary -->
+    <color name="brand_light">#EBF4FD</color>          <!-- Very light brand color -->
+    <color name="brand_dark">#1A365D</color>           <!-- Dark brand color for propaganda card -->
+    
+    <!-- Button Colors -->
+    <color name="button_primary">#4A90E2</color>       <!-- Primary button -->
+    <color name="button_secondary">#FFFFFF</color>     <!-- Secondary button (white) -->
+    <color name="button_text_primary">#FFFFFF</color>  <!-- White text on primary button -->
+    <color name="button_text_secondary">#4A90E2</color> <!-- Blue text on white button -->
+    
+    <!-- Status Colors -->
+    <color name="success">#48BB78</color>
+    <color name="info">#4A90E2</color>
+    <color name="warning">#ED8936</color>
+    <color name="danger">#F56565</color>
+</resources>

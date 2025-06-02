@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
+    
+    <!-- Bright highlight gradient for the action text -->
+    <gradient
+        android:angle="45"
+        android:startColor="#7BB3F0"
+        android:centerColor="#4A90E2"
+        android:endColor="#2E5C9A"
+        android:type="linear" />
+    
+    <!-- Strong border for emphasis -->
+    <stroke
+        android:width="2dp"
+        android:color="#FFFFFF" />
+    
+    <!-- Rounded corners -->
+    <corners android:radius="12dp" />
+    
+</shape> 

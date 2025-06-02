@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">ARMOUR</string>
+    <string name="detection_thresholds">Detection Thresholds</string>
+    <string name="threshold_1">Acceleromter</string>
+    <string name="threshold_2">Gyroscope</string>
+    <string name="threshold_3">Magnetometer</string>
+    <string name="value_hint">Value</string>
+</resources>

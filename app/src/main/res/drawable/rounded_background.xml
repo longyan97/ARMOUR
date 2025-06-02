@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
+    
+    <!-- Rounded corners with larger radius for modern look -->
+    <corners android:radius="16dp" />
+    
+    <!-- Background color using new color scheme -->
+    <solid android:color="@color/component_background" />
+    
+    <!-- Subtle border for better definition -->
+    <stroke
+        android:width="1dp"
+        android:color="@color/border_color" />
+    
+    <!-- Optional: Gradient instead of solid color -->
+    <!--
+    <gradient
+        android:startColor="@color/gradient_start"
+        android:endColor="@color/gradient_end"
+        android:angle="90" />
+    -->
+</shape>
