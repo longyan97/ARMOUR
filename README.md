@@ -75,7 +75,7 @@ Download and install the APK from the [Releases page](https://github.com/longyan
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/yourusername/armour.git
+   git clone https://github.com/longyan97/ARMOUR.git
 2. Open the project in Android Studio.
 3. Ensure you have the necessary SDK and API levels installed:
    - Minimum SDK version: 29
