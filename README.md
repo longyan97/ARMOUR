@@ -158,7 +158,7 @@ If you find ARMOUR useful in your research or publications, you can cite ARMOUR:
 
 ## Contributing
 
-Contributions are welcome! If you'd like to help improve ARMOUR. We also welcome researchers and developers into integrate ARMOUR's detection principle in their works. 
+Contributions are welcome if you'd like to help improve ARMOUR! We also welcome researchers and developers to integrate ARMOUR's detection principle into their works to help improve our privacy and data controls in the age of pervasive sensor data access and abuse.  
 
 ### 🔧 Examples of Areas to Improve
 - Add support for more sensors (e.g., ambient light, proximity)
