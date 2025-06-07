@@ -43,12 +43,10 @@ In short, ARMOUR requests the minimum supported sampling rates of zero-permissio
 
 
 
-<br>
 
 
 
-
-## 🧪 Usage  
+## Usage  
 
 ### 🎞️ Demo
 
@@ -131,7 +129,7 @@ Using ARMOUR, we have examined more than 1,400 Google Play applications of 35 di
 The zero-permission sensor access dataset we collected is available here: https://github.com/ARMOUR-monitor/ARMOUR-monitor.github.io/tree/main/static  
 You can also use the visualization tool we created to analyze the dataset: https://armour-monitor.github.io/
 
-<br>
+
 
 ### 📝 More Information 
 
@@ -158,11 +156,9 @@ If you find ARMOUR useful in your research or publications, you can cite ARMOUR:
 
 
 
-<br>
+## Contributing
 
-## 🤝 Contributing
-
-Contributions are welcome! If you'd like to help improve ARMOUR:
+Contributions are welcome! If you'd like to help improve ARMOUR. We also welcome researchers and developers into integrate ARMOUR's detection principle in their works. 
 
 ### 🔧 Examples of Areas to Improve
 - Add support for more sensors (e.g., ambient light, proximity)
