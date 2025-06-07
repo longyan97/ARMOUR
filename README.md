@@ -4,15 +4,17 @@
 
 <img src="./logo.png" alt="Developers" width="50">
 
-## 🛡️ Overview
+## Overview
 
-ARMOUR is a lightweight Android privacy-enhancement tool for detecting **zero-permission sensor access** by third-party apps at runtime, directly from **user space**—no root, no permissions required. Just install ARMOUR on your device and start monitoring. 
+ARMOUR is a lightweight Android privacy-enhancement tool for **detecting undeclared zero-permission sensor access** by third-party apps at runtime, directly **from user space—no root, no permissions required**. Just install ARMOUR on your device and start monitoring. 
 
-<img src="./images/ui.png" alt="Developers" width="800">
+<img src="./images/ui.png" alt="Developers" width="600">
 
-### 🔍 Motivation
+### 🔥 Motivation
 
-Android's zero-permission sensors such as accelerometer, gyroscope, and magnetometer can be accessed without any user consent or notifications. Despite extensive works investigating how to collect more sensor data to enable various applications, little work has explored how to meet the needs of researchers and data providers to monitor and analyze the sensor usage.These zero-permission sensors pose various privacy risks, including the ability to infer location, activities, or sensitive inputs like keystrokes or voice patterns. ARMOUR helps **restore sensor data usage transparency** by allowing users and researchers to monitor such access.
+Android's zero-permission sensors such as accelerometer, gyroscope, and magnetometer can be accessed by third-party applications without any user consent or notifications. Despite extensive works investigating how to collect more sensor data to enable various applications, little work has explored how to meet the needs of researchers and data providers to monitor and analyze the sensor usage. These zero-permission sensors could pose various privacy risks, including the ability to infer location, activities, or sensitive inputs like keystrokes or voice patterns (see [here](https://yanlong.site/files/wisec25-armour.pdf)). 
+
+ARMOUR helps **restore sensor data usage transparency** by allowing users and researchers to **monitor when, which, and at what sampling rates the zero-permission sensors are accessed**.
 
 ### ⚙️ How It Works
 
@@ -21,24 +23,30 @@ ARMOUR leverages a property of the Android sensor framework:
 > 📈 **Instant Sampling Rate Variation & Convergence Rule**  
 > When multiple apps register for the same sensor, Android aligns them to the highest requested sampling rate. ARMOUR detects sensor access by measuring unexpected changes in its own sampling rate.
 
-In short, ARMOUR requests the minimum supported sampling rates of zero-permission sensors on a device and **detect actual received instant sampling rates higher than the rates requested by ARMOUR, which reveals that another app is accessing these sensors with higher sampling rates**. ARMOUR works entirely in user space, requiring:
+<img src="./images/principle.png" alt="Developers" width="300">
+
+In short, ARMOUR requests the minimum supported sampling rates of zero-permission sensors on a device and detect actual received instant sampling rates higher than the rates requested by ARMOUR, which reveals that another app is accessing these sensors with higher sampling rates. ARMOUR works entirely in user space, requiring:
 - No OS modifications
 - No root privileges
 - No app-specific reverse engineering
 
 
 
+
 ### 🚀 Features
 
-- 🧩 Detects accelerometer, gyroscope, and magnetometer usage. More zero-permission sensors can be easily added. 
-- 🕵️ Detects access from obfuscated, native-code, or even web-based apps
-- 📱 Works on Android 8.0+ (API 26+) without root
-- ⚙️ Runs quietly as a background service
-- 🔧 Profiling mode to calibrate detection for your device
+- Detects accelerometer, gyroscope, and magnetometer usage. More zero-permission sensors can be easily added. 
+- Detects access from obfuscated, native-code, and **even web-based apps**
+- Works on Android 8.0+ (API 26+) and newer devices without root
+- Runs quietly as a background service
+- Profiling mode to calibrate detection for your device
 
 
 
 <br>
+
+
+
 
 ## 🧪 Usage  
 
@@ -66,7 +74,7 @@ In short, ARMOUR requests the minimum supported sampling rates of zero-permissio
 
 ### 📦 Installation
 
-You can either install the prebuilt APK or build the project from source:
+You can either install the prebuilt APK or build the project from source.
 
 #### 🔹 Option 1: Install Prebuilt APK
 Download and install the APK from the [Releases page](https://github.com/longyan97/ARMOUR/releases/tag/v1.0).
@@ -106,13 +114,31 @@ Collected data is stored locally on the device. Use ARMOUR's built-in log viewer
 
 
 
+
+
+## Findings & Dataset
+Using ARMOUR, we have examined more than 1,400 Google Play applications of 35 different categories. A significant number of sensor data abuse problems were found:
+
+- Zero-permission sensor data is already being used **by marketing services for user/device tracking**.
+- **>40% of zero-permission sensor usage** in 14 categories. 
+- Many unexpected usage, such as **~50% of Books/Reference apps** using all three sensors.
+- **~0% of apps** declared the reason for zero-permission sensor access.  
+- Some apps keep accessing sensors **even after being terminated by users**. 
+- **OEMs may not comply** with the sampling rate limiting policies of Android.    
+
+### 🗂️ Dataset
+
+The zero-permission sensor access dataset we collected is available here: https://github.com/ARMOUR-monitor/ARMOUR-monitor.github.io/tree/main/static  
+You can also use the visualization tool we created to analyze the dataset: https://armour-monitor.github.io/
+
 <br>
 
-## 📝 More Information 
+### 📝 More Information 
 
 ARMOUR is developed by researchers from Northeastern University, Ohio State University, and the University of Michigan. For more detailed information, you can refer to the [original research paper](https://yanlong.site/files/wisec25-armour.pdf). If you would like to chat with the authors, you can contact
-- Yan Long (yanlong@umich.edu)
-- Jiancong Cui (cui.jianc@northeastern.edu)
+- [Yan Long](https://yanlong.site/) (yanlong@umich.edu)
+- [Jiancong Cui](https://jiancongcui.github.io/) (cui.jianc@northeastern.edu)
+- [Yuqing Yang](https://frostwing98.com/) (yang.5656@osu.edu)
 <br> <br>
 <img src="./images/univ.png" alt="Developers" width="300">
 
@@ -140,8 +166,7 @@ Contributions are welcome! If you'd like to help improve ARMOUR:
 
 ### 🔧 Examples of Areas to Improve
 - Add support for more sensors (e.g., ambient light, proximity)
-- Enhance UI/UX for easier analysis and setup
-- Add real-time notification and suspicious app detection functionalities 
+- Add real-time notification and suspicious app detection functionalities, such as using `Android Accessibility`
 - Integrate with testing frameworks like `uiautomator` or `Appium`
 
 ### 🧭 How to Contribute
