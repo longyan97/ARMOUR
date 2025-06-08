@@ -9,6 +9,8 @@ import android.content.Context
 import android.content.Intent
 import android.os.Build
 import android.os.IBinder
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import androidx.core.app.NotificationCompat
 import com.spqr.armour.utils.cleanDirectory
@@ -30,6 +32,19 @@ class ArmourService : Service() {
     private var mImuManager: IMUManager? = null
     private var timer: Timer? = null // for multi sample rate testing
 
+    // Real-time detection
+    private var realtimeDetectionManager: RealtimeDetectionManager? = null
+    private var sensorConfigManager: SensorConfigManager? = null
+
+    // Control flags for independent functionality
+    private var enableLogging: Boolean = true
+    private var enableRealtimeNotifications: Boolean = true
+    
+    // Notification timeout control
+    private val notificationHandler = Handler(Looper.getMainLooper())
+    private var notificationTimeoutRunnable: Runnable? = null
+    private val HEADS_UP_DURATION_MS = 1500L // 1.5 seconds
+
     @SuppressLint("ForegroundServiceType")
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         Log.d(Constants.mainLogTag, "Service Starting...")
@@ -41,6 +56,8 @@ class ArmourService : Service() {
         mSampleRates = intent.getStringExtra("sampleRate").toString()
         outputDir = intent.getStringExtra("outputDir").toString()
         isProfiling = intent.getBooleanExtra("profiling", false)
+        enableLogging = intent.getBooleanExtra("enableLogging", true)
+        enableRealtimeNotifications = intent.getBooleanExtra("enableRealtimeNotifications", true)
 
         logServiceSettingInfos(mTestName, mSampleRates, outputDir, isProfiling)
 
@@ -49,6 +66,16 @@ class ArmourService : Service() {
 
         mImuManager = IMUManager(this)
         timer = Timer()
+
+        // Initialize real-time detection for monitoring mode only (not profiling)
+        // and only if real-time notifications are enabled
+        if (!isProfiling && enableRealtimeNotifications) {
+            initializeRealtimeDetection()
+        } else {
+            // Ensure no real-time detection manager is connected when disabled
+            mImuManager?.setRealtimeDetectionManager(null)
+            Log.d(Constants.mainLogTag, "ArmourService: Real-time notifications disabled - no detection manager created")
+        }
 
         // for profiling
         if (isProfiling) {
@@ -146,6 +173,9 @@ class ArmourService : Service() {
         mImuManager!!.register()
         mImuManager!!.startRecording(rateDir.toString())
 
+        // Pass logging setting to IMUManager
+        mImuManager!!.setLoggingEnabled(enableLogging)
+
         // Send broadcast that rate has changed
         if (isProfiling) {
             val intent = Intent(ProfilingActivity.ACTION_RATE_CHANGED)
@@ -190,6 +220,15 @@ class ArmourService : Service() {
 
         Log.d(Constants.mainLogTag, "Service onDestroy")
 
+        // Stop real-time detection
+        realtimeDetectionManager?.stopDetection()
+        mImuManager?.setRealtimeDetectionManager(null)
+        realtimeDetectionManager = null
+
+        // Clean up notification timeout
+        notificationTimeoutRunnable?.let { notificationHandler.removeCallbacks(it) }
+        notificationTimeoutRunnable = null
+
         timer = null
         mImuManager!!.stopRecording()
         mImuManager!!.unregister()
@@ -209,5 +248,183 @@ class ArmourService : Service() {
         Log.d(Constants.mainLogTag, "mSampleRates = ${mSampleRates}")
         Log.d(Constants.mainLogTag, "outputDir = ${outputDir}")
         Log.d(Constants.mainLogTag, "isProfiling = ${isProfiling}")
+        Log.d(Constants.mainLogTag, "enableLogging = ${enableLogging}")
+        Log.d(Constants.mainLogTag, "enableRealtimeNotifications = ${enableRealtimeNotifications}")
+    }
+
+    /**
+     * Initialize real-time detection system for monitoring mode
+     */
+    private fun initializeRealtimeDetection() {
+        try {
+            sensorConfigManager = SensorConfigManager.getInstance(this)
+            
+            // Only initialize if we have valid thresholds
+            if (sensorConfigManager!!.hasValidMinimumRates()) {
+                realtimeDetectionManager = RealtimeDetectionManager(
+                    context = this,
+                    sensorConfigManager = sensorConfigManager!!,
+                    notificationCallback = ::handleDetectionEvent
+                )
+                
+                // Connect to IMU manager
+                mImuManager?.setRealtimeDetectionManager(realtimeDetectionManager)
+                
+                // Start detection
+                realtimeDetectionManager?.startDetection()
+                
+                Log.d(Constants.mainLogTag, "ArmourService: Real-time detection initialized and started")
+            } else {
+                Log.w(Constants.mainLogTag, "ArmourService: Cannot initialize real-time detection - no valid thresholds")
+            }
+        } catch (e: Exception) {
+            Log.e(Constants.mainLogTag, "ArmourService: Failed to initialize real-time detection", e)
+        }
+    }
+
+    /**
+     * Handle detection events from RealtimeDetectionManager
+     */
+    private fun handleDetectionEvent(event: RealtimeDetectionManager.DetectionEvent) {
+        Log.d(Constants.mainLogTag, "ArmourService: Detection event - ${event.sensorName} ${event.eventType} (${String.format("%.1f", event.instantRate)} Hz)")
+        
+        // Update notification for both start and end events
+        // But make end events silent (no sound/vibration)
+        val isSilentUpdate = (event.eventType == RealtimeDetectionManager.EventType.USAGE_ENDED)
+        updateNotificationWithDetection(event, isSilentUpdate)
+    }
+
+    /**
+     * Update the foreground notification to show detection information
+     */
+    private fun updateNotificationWithDetection(event: RealtimeDetectionManager.DetectionEvent, isSilentUpdate: Boolean) {
+        try {
+            val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+            val detectionStatus = realtimeDetectionManager?.getDetectionStatus() ?: emptyMap()
+            
+            // Count active detections
+            val activeDetections = detectionStatus.values.count { it == "DETECTED" }
+            val activeSensors = detectionStatus.filterValues { it == "DETECTED" }.keys
+            
+            // Create updated notification content
+            val (title, text) = when {
+                activeDetections == 0 -> {
+                    "ARMOUR Monitoring Active" to "Detecting sensor access by other apps"
+                }
+                activeDetections == 1 -> {
+                    "⚠️ Sensor Access Detected" to "${activeSensors.first()} being used (${String.format("%.1f", event.instantRate)} Hz)"
+                }
+                else -> {
+                    "⚠️ Multiple Sensors Detected" to "${activeSensors.joinToString(", ")} being used"
+                }
+            }
+            
+            // Build updated notification
+            val notificationIntent = Intent(this, MonitoringActivity::class.java)
+            notificationIntent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP
+            val pendingIntent = PendingIntent.getActivity(this, 0, notificationIntent, PendingIntent.FLAG_IMMUTABLE)
+            
+            // Choose priority based on whether this is a silent update
+            val priority = if (isSilentUpdate) {
+                NotificationCompat.PRIORITY_LOW // Silent updates for usage end
+            } else {
+                if (activeDetections > 0) NotificationCompat.PRIORITY_HIGH else NotificationCompat.PRIORITY_DEFAULT
+            }
+            
+            val notification = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                NotificationCompat.Builder(this, Constants.CHANNEL_ID)
+                    .setContentTitle(title)
+                    .setContentText(text)
+                    .setSmallIcon(R.drawable.ic_launcher_background)
+                    .setContentIntent(pendingIntent)
+                    .setPriority(priority)
+                    .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
+                    .setOngoing(true)
+                    .setAutoCancel(false)
+                    .setOnlyAlertOnce(isSilentUpdate) // Don't alert again for silent updates
+                    .setSilent(isSilentUpdate) // Make silent if it's an end event
+                    .build()
+            } else {
+                NotificationCompat.Builder(this, Constants.CHANNEL_ID)
+                    .setContentTitle(title)
+                    .setContentText(text)
+                    .setSmallIcon(R.drawable.ic_launcher_background)
+                    .setContentIntent(pendingIntent)
+                    .setPriority(priority)
+                    .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
+                    .setOngoing(true)
+                    .setAutoCancel(false)
+                    .setOnlyAlertOnce(isSilentUpdate) // Don't alert again for silent updates
+                    .build()
+            }
+            
+            // Update the notification
+            notificationManager.notify(1, notification)
+            
+            // If this is a high-priority notification (sensor detected), schedule priority reduction
+            if (!isSilentUpdate && activeDetections > 0) {
+                scheduleNotificationPriorityReduction(notificationManager, title, text, pendingIntent)
+            }
+            
+        } catch (e: Exception) {
+            Log.e(Constants.mainLogTag, "ArmourService: Failed to update notification", e)
+        }
+    }
+
+    /**
+     * Schedule automatic reduction of notification priority after heads-up duration
+     * This makes the heads-up notification disappear while keeping status bar notification
+     */
+    private fun scheduleNotificationPriorityReduction(
+        notificationManager: NotificationManager, 
+        title: String, 
+        text: String, 
+        pendingIntent: PendingIntent
+    ) {
+        // Cancel any existing timeout
+        notificationTimeoutRunnable?.let { notificationHandler.removeCallbacks(it) }
+        
+        notificationTimeoutRunnable = Runnable {
+            try {
+                // Create a lower priority version of the same notification
+                val notification = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                    NotificationCompat.Builder(this, Constants.CHANNEL_ID)
+                        .setContentTitle(title)
+                        .setContentText(text)
+                        .setSmallIcon(R.drawable.ic_launcher_background)
+                        .setContentIntent(pendingIntent)
+                        .setPriority(NotificationCompat.PRIORITY_DEFAULT) // Reduced from HIGH
+                        .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
+                        .setOngoing(true)
+                        .setAutoCancel(false)
+                        .setOnlyAlertOnce(true) // Don't alert again
+                        .setSilent(true) // Make it silent
+                        .build()
+                } else {
+                    NotificationCompat.Builder(this, Constants.CHANNEL_ID)
+                        .setContentTitle(title)
+                        .setContentText(text)
+                        .setSmallIcon(R.drawable.ic_launcher_background)
+                        .setContentIntent(pendingIntent)
+                        .setPriority(NotificationCompat.PRIORITY_DEFAULT) // Reduced from HIGH
+                        .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
+                        .setOngoing(true)
+                        .setAutoCancel(false)
+                        .setOnlyAlertOnce(true) // Don't alert again
+                        .build()
+                }
+                
+                // Update with lower priority notification
+                notificationManager.notify(1, notification)
+                Log.d(Constants.mainLogTag, "ArmourService: Reduced notification priority after ${HEADS_UP_DURATION_MS}ms")
+                
+            } catch (e: Exception) {
+                Log.e(Constants.mainLogTag, "ArmourService: Failed to reduce notification priority", e)
+            }
+        }
+        
+        // Schedule the priority reduction
+        notificationHandler.postDelayed(notificationTimeoutRunnable!!, HEADS_UP_DURATION_MS)
+        Log.d(Constants.mainLogTag, "ArmourService: Scheduled notification priority reduction in ${HEADS_UP_DURATION_MS}ms")
     }
 }

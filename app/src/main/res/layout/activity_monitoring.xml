@@ -81,11 +81,37 @@
                     android:id="@+id/checkbox_background_monitoring"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="@dimen/spacing_compact_xl"
+                    android:layout_marginBottom="@dimen/spacing_compact_xs"
                     android:text="Background Monitoring"
                     android:textSize="@dimen/size_component_content"
                     android:textColor="@color/font_color"
                     android:fontFamily="sans-serif"
+                    app:buttonTint="@color/primary_color" />
+
+                <!-- Log Monitoring Data Checkbox -->
+                <com.google.android.material.checkbox.MaterialCheckBox
+                    android:id="@+id/checkbox_log_data"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/spacing_compact_xs"
+                    android:text="Log Monitoring Data"
+                    android:textSize="@dimen/size_component_content"
+                    android:textColor="@color/font_color"
+                    android:fontFamily="sans-serif"
+                    android:checked="true"
+                    app:buttonTint="@color/primary_color" />
+
+                <!-- Real-time Notifications Checkbox -->
+                <com.google.android.material.checkbox.MaterialCheckBox
+                    android:id="@+id/checkbox_realtime_notifications"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/spacing_compact_xl"
+                    android:text="Real-time Notifications"
+                    android:textSize="@dimen/size_component_content"
+                    android:textColor="@color/font_color"
+                    android:fontFamily="sans-serif"
+                    android:checked="true"
                     app:buttonTint="@color/primary_color" />
 
                 <!-- Test Name Label -->
@@ -180,7 +206,7 @@
                     android:id="@+id/btn_start_stop"
                     android:layout_width="match_parent"
                     android:layout_height="60dp"
-                    android:layout_marginBottom="@dimen/spacing_compact_lg"
+                    android:layout_marginBottom="@dimen/spacing_compact_xs"
                     android:text="Start Monitoring"
                     android:textSize="@dimen/button_font_size"
                     android:autoSizeTextType="uniform"

@@ -53,6 +53,8 @@ class MonitoringActivity : AppCompatActivity() {
     private lateinit var generateGraphButton: Button
     private lateinit var helpButton: Button
     private lateinit var backgroundMonitoringCheckBox: CheckBox
+    private lateinit var logDataCheckBox: CheckBox
+    private lateinit var realtimeNotificationsCheckBox: CheckBox
     private lateinit var yAxisTitle: TextView
     private lateinit var resultMessageBox: TextView
     private lateinit var mpAcceLineChart: LineChart
@@ -90,6 +92,7 @@ class MonitoringActivity : AppCompatActivity() {
     private var mTestName: String = "unnamed"
     private var mSampleRates: String = "1"
     private var isServiceRunning: Boolean = false
+    private var wasLoggingEnabledInLastSession: Boolean = true // Track logging state from last session
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -105,6 +108,8 @@ class MonitoringActivity : AppCompatActivity() {
         generateGraphButton = binding.btnGenerateGraph
         helpButton = binding.btnHelp
         backgroundMonitoringCheckBox = binding.checkboxBackgroundMonitoring
+        logDataCheckBox = binding.checkboxLogData
+        realtimeNotificationsCheckBox = binding.checkboxRealtimeNotifications
         yAxisTitle = binding.yAxisTitle
         resultMessageBox = binding.resultMessageBox
         mpAcceLineChart = binding.mpAcceChart
@@ -127,6 +132,10 @@ class MonitoringActivity : AppCompatActivity() {
 
         // Set background monitoring checkbox to checked by default
         backgroundMonitoringCheckBox.isChecked = true
+
+        // Set new checkboxes to checked by default
+        logDataCheckBox.isChecked = true
+        realtimeNotificationsCheckBox.isChecked = true
 
         // event binding
         startStopButton.setOnClickListener{ view -> 
@@ -201,11 +210,17 @@ class MonitoringActivity : AppCompatActivity() {
 
         // init service
         outputDir = resetOutputDir(this)
+        
+        // Capture the logging state for this session
+        wasLoggingEnabledInLastSession = logDataCheckBox.isChecked
+        
         val serviceIntent = Intent(this, ArmourService::class.java)
         serviceIntent.putExtra("inputExtra", mTestName)
         serviceIntent.putExtra("sampleRate", mSampleRates)
         serviceIntent.putExtra("outputDir", outputDir)
         serviceIntent.putExtra("profiling", false) // Never profiling from monitoring activity
+        serviceIntent.putExtra("enableLogging", logDataCheckBox.isChecked)
+        serviceIntent.putExtra("enableRealtimeNotifications", realtimeNotificationsCheckBox.isChecked)
         startStopButton.text = "Stop"
 
         ContextCompat.startForegroundService(this, serviceIntent)
@@ -238,6 +253,12 @@ class MonitoringActivity : AppCompatActivity() {
     }
 
     private fun onGenerateButtonClicked(view: View) {
+        // Check if logging was disabled in the last monitoring session
+        if (!wasLoggingEnabledInLastSession) {
+            Toast.makeText(this, "No data to display. Data logging was disabled during monitoring.", Toast.LENGTH_LONG).show()
+            return
+        }
+        
         // Update the current sample rate from the UI
         generateGraphButton.text = "Generating Graphs..."
         generateGraphButton.isEnabled = false // Disable button while generating graphs
@@ -260,7 +281,13 @@ class MonitoringActivity : AppCompatActivity() {
 
         if (sensorDataFiles == null || sensorDataFiles.isEmpty()) {
             Log.d(Constants.mainLogTag, "No sensor data files found")
-            Toast.makeText(this, "No recording file to plot.", Toast.LENGTH_SHORT).show()
+            // Reset UI state and return early
+            generateGraphButton.text = "See Last Results"
+            generateGraphButton.isEnabled = true
+            // Don't show sensor layouts if there's no data
+            for (sensorLayout in sensorLayouts) {
+                sensorLayout.visibility = View.GONE
+            }
             return
         }
 
@@ -317,18 +344,25 @@ class MonitoringActivity : AppCompatActivity() {
             sensorDataNames.map { File(outputDir, it) }
         }
 
-        // If files not found, try all rate subdirectories
-        if (!sensorDataFiles[0].exists()) {
+        // Check if any sensor data files exist
+        val anyFileExists = sensorDataFiles.any { it.exists() }
+        
+        if (!anyFileExists) {
+            // Try all rate subdirectories
             val allRateDirs = monitoringDir.listFiles()?.filter { it.isDirectory } ?: emptyList()
+            var foundInSubdir = false
+            
             allRateDirs.forEach { altRateDir ->
                 val altFiles = sensorDataNames.map { File(altRateDir, it) }
-                if (altFiles[0].exists()) {
+                if (altFiles.any { it.exists() }) {
                     Log.d(Constants.mainLogTag, "Found files in rate directory: ${altRateDir.name}")
                     return SensorDataUtils.cleanSensorData(altFiles)
                 }
             }
-            Log.d(Constants.mainLogTag, "File Not Created: ${sensorDataFiles[0]}")
-            Toast.makeText(this, "No recording file to plot.", Toast.LENGTH_SHORT).show()
+            
+            // If no files found anywhere, check if logging was likely disabled
+            Log.d(Constants.mainLogTag, "No sensor data files found in: ${monitoringDir.absolutePath}")
+            Toast.makeText(this, "No sensor data to plot. Data logging may have been disabled during monitoring.", Toast.LENGTH_LONG).show()
             return null
         }
 

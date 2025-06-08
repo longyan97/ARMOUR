@@ -37,6 +37,12 @@ class IMUManager(fgService: Context): SensorEventListener {
     private var mGyroWriter: BufferedWriter? = null
     private var mMagnWriter: BufferedWriter? = null
 
+    // Real-time detection integration
+    private var realtimeDetectionManager: RealtimeDetectionManager? = null
+
+    // Logging control
+    private var loggingEnabled: Boolean = true
+
     private val ImuHeader = "Timestamp[nanosec],sensor_x,sensor_y,sensor_z,Unix time[nanosec]\n";
 
 
@@ -67,19 +73,29 @@ class IMUManager(fgService: Context): SensorEventListener {
     fun startRecording(captureResultDir: String) {
         Log.d(Constants.mainLogTag, "Recording ...")
         Log.d(Constants.mainLogTag, "TargetDir: ${captureResultDir}")
+        Log.d(Constants.mainLogTag, "Logging enabled: ${loggingEnabled}")
 
-        // init writers
-        writers = listOf(
-            Constants.AccelerometerOutputName +".csv",
-            Constants.GyroscopeOutputName +".csv",
-            Constants.MagnetometerOutputName +".csv"
-            ).map {
-                fileName -> BufferedWriter(FileWriter(captureResultDir + File.separator + fileName))
+        // Only initialize file writers if logging is enabled
+        if (loggingEnabled) {
+            // init writers
+            writers = listOf(
+                Constants.AccelerometerOutputName +".csv",
+                Constants.GyroscopeOutputName +".csv",
+                Constants.MagnetometerOutputName +".csv"
+                ).map {
+                    fileName -> BufferedWriter(FileWriter(captureResultDir + File.separator + fileName))
+            }
+            writers.forEach{writer -> writer.write(ImuHeader)}
+            mAcceWriter = writers[0]
+            mGyroWriter = writers[1]
+            mMagnWriter = writers[2]
+        } else {
+            // No file writers needed when logging is disabled
+            mAcceWriter = null
+            mGyroWriter = null
+            mMagnWriter = null
         }
-        writers.forEach{writer -> writer.write(ImuHeader)}
-        mAcceWriter = writers[0]
-        mGyroWriter = writers[1]
-        mMagnWriter = writers[2]
+        
         mRecordingInertialData = true
     }
 
@@ -87,9 +103,12 @@ class IMUManager(fgService: Context): SensorEventListener {
         // close writers
         if (mRecordingInertialData) {
             mRecordingInertialData = false
-            for (writer in writers) {
-                writer.flush()
-                writer.close()
+            // Only close writers if they exist (logging was enabled)
+            if (loggingEnabled && ::writers.isInitialized) {
+                for (writer in writers) {
+                    writer.flush()
+                    writer.close()
+                }
             }
         }
         mAcceWriter = null
@@ -104,19 +123,26 @@ class IMUManager(fgService: Context): SensorEventListener {
             return
         }
 
-        // recording sensor data
-        val unixTime = System.currentTimeMillis()
-        val sensorPacket = SensorPacket(event!!.timestamp, unixTime, event.values.toList())
+        // Only feed timestamp to real-time detection manager if it's active
+        // This avoids unnecessary processing when real-time notifications are disabled
+        realtimeDetectionManager?.onSensorTimestamp(event!!.sensor.type, event.timestamp)
 
-        when (event.sensor.type) {
-            Sensor.TYPE_ACCELEROMETER -> {
-                mAcceWriter!!.write(sensorPacket.toString() + "\n")
-            }
-            Sensor.TYPE_GYROSCOPE -> {
-                mGyroWriter!!.write(sensorPacket.toString() + "\n")
-            }
-            Sensor.TYPE_MAGNETIC_FIELD -> {
-                mMagnWriter!!.write(sensorPacket.toString() + "\n")
+        // Only write to files if logging is enabled
+        if (loggingEnabled) {
+            // recording sensor data
+            val unixTime = System.currentTimeMillis()
+            val sensorPacket = SensorPacket(event!!.timestamp, unixTime, event.values.toList())
+
+            when (event.sensor.type) {
+                Sensor.TYPE_ACCELEROMETER -> {
+                    mAcceWriter!!.write(sensorPacket.toString() + "\n")
+                }
+                Sensor.TYPE_GYROSCOPE -> {
+                    mGyroWriter!!.write(sensorPacket.toString() + "\n")
+                }
+                Sensor.TYPE_MAGNETIC_FIELD -> {
+                    mMagnWriter!!.write(sensorPacket.toString() + "\n")
+                }
             }
         }
     }
@@ -151,5 +177,21 @@ class IMUManager(fgService: Context): SensorEventListener {
     fun exit() {
         stopRecording()
         unregister()
+    }
+
+    /**
+     * Set the real-time detection manager for feeding sensor timestamps
+     */
+    fun setRealtimeDetectionManager(manager: RealtimeDetectionManager?) {
+        realtimeDetectionManager = manager
+        Log.d(Constants.mainLogTag, "IMUManager: Real-time detection manager ${if (manager != null) "connected" else "disconnected"}")
+    }
+
+    /**
+     * Enable or disable logging of sensor data to files
+     */
+    fun setLoggingEnabled(enabled: Boolean) {
+        loggingEnabled = enabled
+        Log.d(Constants.mainLogTag, "IMUManager: Logging ${if (enabled) "enabled" else "disabled"}")
     }
 }
