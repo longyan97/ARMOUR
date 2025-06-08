@@ -81,7 +81,7 @@ class MonitoringActivity_backup : AppCompatActivity() {
         }
 
         checkPermission()
-        createNotificationChannel()
+        // Removed createNotificationChannel() - now handled by ArmourService
 
         // Initialize output directory with default name
         val dateFormat = SimpleDateFormat("yyyy_MM_dd_HH_mm_ss", Locale.US)
@@ -388,27 +388,6 @@ class MonitoringActivity_backup : AppCompatActivity() {
         // update
         mSampleRates = mSampleRatesList.joinToString(",")
         return true;
-    }
-
-    private fun createNotificationChannel() {
-        Log.d(Constants.mainLogTag, "Creating Notification Channel")
-        // Build.VERSION.SDK_INT - returns the API level of the Android version on the current device
-        // Build.VERSION_CODES.O - A constant representing Android 8.0 (Oreo).
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val serviceChannel = NotificationChannel(
-                Constants.CHANNEL_ID,
-                "ARMOUR Service Channel",
-                NotificationManager.IMPORTANCE_DEFAULT // Use DEFAULT instead of HIGH to be less intrusive
-            )
-            // Configure the notification channel
-            serviceChannel.description = "Used for monitoring sensor data in background"
-            serviceChannel.enableLights(true)
-            serviceChannel.setShowBadge(true)
-            
-            val manager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-            manager.createNotificationChannel(serviceChannel)
-            Log.d(Constants.mainLogTag, "Notification Channel created with ID: ${Constants.CHANNEL_ID}")
-        }
     }
 
     // Check Permission

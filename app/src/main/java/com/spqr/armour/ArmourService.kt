@@ -57,42 +57,49 @@ class ArmourService : Service() {
         }
 
         // create notification
-        val notificationIntent = Intent(this, MainActivity::class.java)
+        val notificationIntent = Intent(this, MonitoringActivity::class.java)
+        // Add flags to bring the existing activity to front instead of creating a new one
+        notificationIntent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP
         val pendingIntent = PendingIntent.getActivity(this, 0, notificationIntent,
             PendingIntent.FLAG_IMMUTABLE)
         
-        // Create a minimal notification that won't show in the notification drawer
+        // Create a highly visible notification for background monitoring
         val notification = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            // For Android Oreo and above, use a low importance notification channel
-            val channelId = "armour_minimal_channel"
+            // For Android Oreo and above, use a high importance notification channel
             val channel = NotificationChannel(
-                channelId,
-                "Minimal Service Channel",
-                NotificationManager.IMPORTANCE_MIN
+                Constants.CHANNEL_ID,
+                "ARMOUR Service Channel",
+                NotificationManager.IMPORTANCE_HIGH
             )
-            channel.setShowBadge(false)
+            // Configure the notification channel for high visibility
+            channel.description = "Shows status when ARMOUR is monitoring sensor access in background"
+            channel.enableLights(true)
+            channel.setShowBadge(true)
+            channel.enableVibration(false) // No vibration for ongoing monitoring
             val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
             notificationManager.createNotificationChannel(channel)
             
-            NotificationCompat.Builder(this, channelId)
-                .setContentTitle("ARMOUR Service")
-                .setContentText("Service running")
+            NotificationCompat.Builder(this, Constants.CHANNEL_ID)
+                .setContentTitle("ARMOUR Monitoring Active")
+                .setContentText("Detecting sensor access by other apps")
                 .setSmallIcon(R.drawable.ic_launcher_background)
                 .setContentIntent(pendingIntent)
-                .setPriority(NotificationCompat.PRIORITY_MIN)
-                .setVisibility(NotificationCompat.VISIBILITY_SECRET)
+                .setPriority(NotificationCompat.PRIORITY_HIGH)
+                .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
                 .setOngoing(true)
+                .setAutoCancel(false)
                 .build()
         } else {
-            // For older versions
+            // For older versions, use the same channel ID
             NotificationCompat.Builder(this, Constants.CHANNEL_ID)
-                .setContentTitle("ARMOUR Service")
-                .setContentText("Service running")
+                .setContentTitle("ARMOUR Monitoring Active")
+                .setContentText("Detecting sensor access by other apps")
                 .setSmallIcon(R.drawable.ic_launcher_background)
                 .setContentIntent(pendingIntent)
-                .setPriority(NotificationCompat.PRIORITY_MIN)
-                .setVisibility(NotificationCompat.VISIBILITY_SECRET)
+                .setPriority(NotificationCompat.PRIORITY_HIGH)
+                .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
                 .setOngoing(true)
+                .setAutoCancel(false)
                 .build()
         }
 

@@ -119,7 +119,7 @@ class MonitoringActivity : AppCompatActivity() {
         sensorConfigManager = SensorConfigManager.getInstance(this)
 
         checkPermission()
-        createNotificationChannel()
+        // Removed createNotificationChannel() - now handled by ArmourService
         initSensorThresholds()
 
         lineCharts = listOf(mpAcceLineChart, mpGyroLineChart, mpMagnLineChart)
@@ -723,25 +723,47 @@ class MonitoringActivity : AppCompatActivity() {
         return true;
     }
 
-    private fun createNotificationChannel() {
-        Log.d(Constants.mainLogTag, "Creating Notification Channel")
-        // Build.VERSION.SDK_INT - returns the API level of the Android version on the current device
-        // Build.VERSION_CODES.O - A constant representing Android 8.0 (Oreo).
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val serviceChannel = NotificationChannel(
-                Constants.CHANNEL_ID,
-                "ARMOUR Service Channel",
-                NotificationManager.IMPORTANCE_DEFAULT // Use DEFAULT instead of HIGH to be less intrusive
-            )
-            // Configure the notification channel
-            serviceChannel.description = "Used for monitoring sensor data in background"
-            serviceChannel.enableLights(true)
-            serviceChannel.setShowBadge(true)
+    private fun initSensorThresholds() {
+        val allSensorThresholds: Map<String, Double> = sensorConfigManager.getAllThresholds()
+        acceThresholdString = allSensorThresholds.get(Constants.AccelerometerOutputName).toString()
+        gyroThresholdString = allSensorThresholds.get(Constants.GyroscopeOutputName).toString()
+        magnThresholdString = allSensorThresholds.get(Constants.MagnetometerOutputName).toString()
+    }
+
+    private fun showHelpDialog() {
+        val helpMessage = """
             
-            val manager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-            manager.createNotificationChannel(serviceChannel)
-            Log.d(Constants.mainLogTag, "Notification Channel created with ID: ${Constants.CHANNEL_ID}")
-        }
+            🎯 About:
+            • Detect apps that secretly access device zero-permission sensors
+            • Real-time detection of accelerometer, gyroscope, and magnetometer usage
+            • Privacy enhancement through sensor usage awareness
+            
+            ⚙️ How Monitoring Works:
+            
+            1️⃣ Configure Settings:
+            • Enter a descriptive test name (optional)
+            • Set request rate in Hz (default: 1 Hz works well on most phones)
+            • Keep "Background Monitoring" checked so that ARMOUR keeps running when the device runs other apps
+                        
+            2️⃣ Start Monitoring Target Apps:
+            • Tap "Start Monitoring" - ARMOUR will move to background
+            • Open and interact with the app you want to test
+            
+            3️⃣ View Results:
+            • Return to ARMOUR app and tap "Stop" to end monitoring
+            • Tap "See Results" to view detection graphs
+            • Spikes above red threshold lines indicate sensor access by other apps
+           
+        """.trimIndent()
+        
+        AlertDialog.Builder(this)
+            .setTitle("Monitoring Guide")
+            .setMessage(helpMessage)
+            .setPositiveButton("Got it!") { dialog, _ -> 
+                dialog.dismiss()
+            }
+            .setIcon(android.R.drawable.ic_dialog_info)
+            .show()
     }
 
     // Check Permission
@@ -814,48 +836,5 @@ class MonitoringActivity : AppCompatActivity() {
         if (isServiceRunning) {
             stopRecordingService()
         }
-    }
-
-    private fun initSensorThresholds() {
-        val allSensorThresholds: Map<String, Double> = sensorConfigManager.getAllThresholds()
-        acceThresholdString = allSensorThresholds.get(Constants.AccelerometerOutputName).toString()
-        gyroThresholdString = allSensorThresholds.get(Constants.GyroscopeOutputName).toString()
-        magnThresholdString = allSensorThresholds.get(Constants.MagnetometerOutputName).toString()
-    }
-
-    private fun showHelpDialog() {
-        val helpMessage = """
-            
-            🎯 About:
-            • Detect apps that secretly access device zero-permission sensors
-            • Real-time detection of accelerometer, gyroscope, and magnetometer usage
-            • Privacy enhancement through sensor usage awareness
-            
-            ⚙️ How Monitoring Works:
-            
-            1️⃣ Configure Settings:
-            • Enter a descriptive test name (optional)
-            • Set request rate in Hz (default: 1 Hz works well on most phones)
-            • Keep "Background Monitoring" checked so that ARMOUR keeps running when the device runs other apps
-                        
-            2️⃣ Start Monitoring Target Apps:
-            • Tap "Start Monitoring" - ARMOUR will move to background
-            • Open and interact with the app you want to test
-            
-            3️⃣ View Results:
-            • Return to ARMOUR app and tap "Stop" to end monitoring
-            • Tap "See Results" to view detection graphs
-            • Spikes above red threshold lines indicate sensor access by other apps
-           
-        """.trimIndent()
-        
-        AlertDialog.Builder(this)
-            .setTitle("Monitoring Guide")
-            .setMessage(helpMessage)
-            .setPositiveButton("Got it!") { dialog, _ -> 
-                dialog.dismiss()
-            }
-            .setIcon(android.R.drawable.ic_dialog_info)
-            .show()
     }
 } 
