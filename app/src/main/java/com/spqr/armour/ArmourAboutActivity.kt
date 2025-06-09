@@ -32,7 +32,7 @@ class ArmourAboutActivity : AppCompatActivity() {
         }
         
         paperButton.setOnClickListener {
-            openUrl("https://github.com/longyan97/ARMOUR")  // Update this to the actual paper URL when available
+            openUrl("https://yanlong.site/files/wisec25-armour.pdf")  // Update this to the actual paper URL when available
         }
         
         backButton.setOnClickListener {
