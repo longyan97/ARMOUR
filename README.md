@@ -160,12 +160,16 @@ If you find ARMOUR useful in your research or publications, you can cite ARMOUR:
 
 Contributions are welcome if you'd like to help improve ARMOUR! We also welcome researchers and developers to integrate ARMOUR's detection principle into their works to help improve our privacy and data controls in the age of pervasive sensor data access and abuse.  
 
-### 🔧 Examples of Areas to Improve
+### 💪 Examples of Areas to Improve
 - Add support for more sensors (e.g., ambient light, proximity)
-- Add real-time notification and suspicious app detection functionalities, such as using `Android Accessibility`
+- Enhance the real-time detection and notification capabilities using `Android Accessibility`
 - Integrate with testing frameworks like `uiautomator` or `Appium`
 
-### 🧭 How to Contribute
+### 🔧 Known Issues
+- The X axis of recording data plots may not correctly display the units (seconds).
+- The real-time notification may have glitches on certain phones. Remember to enable notifications of ARMOUR.  
+
+### 🙌 How to Contribute
 1. Fork the repository
 2. Create a new feature branch
 3. Commit your changes and push to your fork

@@ -1,9 +1,11 @@
 package com.spqr.armour
 
+import android.app.NotificationManager
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
+import android.os.Build
 import android.os.Bundle
 import android.os.Environment
 import android.os.Handler
@@ -413,6 +415,9 @@ class ProfilingActivity : AppCompatActivity() {
     }
     
     private fun stopProfilingService() {
+        // Clear notifications before stopping service (Samsung S9 fix)
+        clearServiceNotifications()
+        
         val serviceIntent = Intent(this, ArmourService::class.java)
         stopService(serviceIntent)
         isServiceRunning = false
@@ -426,6 +431,37 @@ class ProfilingActivity : AppCompatActivity() {
         if (!profilingCompleted) {
             progressBar.visibility = View.INVISIBLE
             Toast.makeText(this, "Profiling stopped before completion", Toast.LENGTH_SHORT).show()
+        }
+    }
+    
+    /**
+     * Clear service notifications before stopping - Samsung device compatibility fix
+     */
+    private fun clearServiceNotifications() {
+        try {
+            val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+            
+            // Clear the specific notification ID used by ArmourService
+            notificationManager.cancel(1)
+            Log.d(Constants.mainLogTag, "ProfilingActivity: Cleared service notification ID 1")
+            
+            // Additional cleanup for Samsung devices
+            if (Build.MANUFACTURER.equals("samsung", ignoreCase = true) || 
+                Build.BRAND.equals("samsung", ignoreCase = true)) {
+                // Give a small delay to ensure the cancel operation is processed
+                Handler(Looper.getMainLooper()).postDelayed({
+                    try {
+                        // Double-check cleanup for Samsung devices
+                        notificationManager.cancel(1)
+                        Log.d(Constants.mainLogTag, "ProfilingActivity: Samsung device - performed additional notification cleanup")
+                    } catch (e: Exception) {
+                        Log.w(Constants.mainLogTag, "ProfilingActivity: Samsung additional cleanup failed", e)
+                    }
+                }, 100) // 100ms delay
+            }
+            
+        } catch (e: Exception) {
+            Log.e(Constants.mainLogTag, "ProfilingActivity: Failed to clear service notifications", e)
         }
     }
     

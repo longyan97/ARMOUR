@@ -92,41 +92,57 @@ class ArmourService : Service() {
         
         // Create a highly visible notification for background monitoring
         val notification = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            // For Android Oreo and above, use a high importance notification channel
-            val channel = NotificationChannel(
-                Constants.CHANNEL_ID,
-                "ARMOUR Service Channel",
+            // For Android Oreo and above, create two notification channels
+            val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+            
+            // Channel 1: High importance for sensor detection alerts
+            val alertChannel = NotificationChannel(
+                "${Constants.CHANNEL_ID}_ALERT",
+                "ARMOUR Sensor Alerts",
                 NotificationManager.IMPORTANCE_HIGH
             )
-            // Configure the notification channel for high visibility
-            channel.description = "Shows status when ARMOUR is monitoring sensor access in background"
-            channel.enableLights(true)
-            channel.setShowBadge(true)
-            channel.enableVibration(false) // No vibration for ongoing monitoring
-            val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-            notificationManager.createNotificationChannel(channel)
+            alertChannel.description = "Alerts when sensor access is detected"
+            alertChannel.enableLights(true)
+            alertChannel.setShowBadge(true)
+            alertChannel.enableVibration(false)
+            notificationManager.createNotificationChannel(alertChannel)
             
-            NotificationCompat.Builder(this, Constants.CHANNEL_ID)
+            // Channel 2: Low importance for status updates (idle state)
+            val statusChannel = NotificationChannel(
+                "${Constants.CHANNEL_ID}_STATUS",
+                "ARMOUR Status Updates", 
+                NotificationManager.IMPORTANCE_LOW
+            )
+            statusChannel.description = "Shows monitoring status and idle state updates"
+            statusChannel.enableLights(false)
+            statusChannel.setShowBadge(true)
+            statusChannel.enableVibration(false)
+            notificationManager.createNotificationChannel(statusChannel)
+            
+            // Start with status channel for initial "monitoring active" notification
+            NotificationCompat.Builder(this, "${Constants.CHANNEL_ID}_STATUS")
                 .setContentTitle("ARMOUR Monitoring Active")
                 .setContentText("Detecting sensor access by other apps")
                 .setSmallIcon(R.drawable.ic_launcher_background)
                 .setContentIntent(pendingIntent)
-                .setPriority(NotificationCompat.PRIORITY_HIGH)
+                .setPriority(NotificationCompat.PRIORITY_LOW)
                 .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
                 .setOngoing(true)
                 .setAutoCancel(false)
+                .setOnlyAlertOnce(true)
                 .build()
         } else {
-            // For older versions, use the same channel ID
+            // For older versions, use the original channel ID with low priority for initial notification
             NotificationCompat.Builder(this, Constants.CHANNEL_ID)
                 .setContentTitle("ARMOUR Monitoring Active")
                 .setContentText("Detecting sensor access by other apps")
                 .setSmallIcon(R.drawable.ic_launcher_background)
                 .setContentIntent(pendingIntent)
-                .setPriority(NotificationCompat.PRIORITY_HIGH)
+                .setPriority(NotificationCompat.PRIORITY_LOW)
                 .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
                 .setOngoing(true)
                 .setAutoCancel(false)
+                .setOnlyAlertOnce(true)
                 .build()
         }
 
@@ -220,6 +236,9 @@ class ArmourService : Service() {
 
         Log.d(Constants.mainLogTag, "Service onDestroy")
 
+        // Explicitly clear all notifications before other cleanup (Samsung S9 fix)
+        clearAllNotifications()
+
         // Stop real-time detection
         realtimeDetectionManager?.stopDetection()
         mImuManager?.setRealtimeDetectionManager(null)
@@ -237,6 +256,39 @@ class ArmourService : Service() {
         Log.d(Constants.mainLogTag, "Service onDestroy [Success]")
     }
 
+    /**
+     * Clear all notifications explicitly - Samsung device compatibility fix
+     */
+    private fun clearAllNotifications() {
+        try {
+            val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+            
+            // Cancel specific notification ID first
+            notificationManager.cancel(1)
+            Log.d(Constants.mainLogTag, "ArmourService: Cancelled notification ID 1")
+            
+            // For Android O+ and Samsung devices, use more aggressive cleanup
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                // Cancel notifications from both channels to handle dual-channel approach
+                try {
+                    // Note: We can't cancel by channel directly, but cancelAll() will clear everything
+                    // This is more aggressive but necessary for Samsung devices
+                    if (Build.MANUFACTURER.equals("samsung", ignoreCase = true) || 
+                        Build.BRAND.equals("samsung", ignoreCase = true)) {
+                        notificationManager.cancelAll()
+                        Log.d(Constants.mainLogTag, "ArmourService: Used cancelAll() for Samsung device")
+                    }
+                } catch (e: Exception) {
+                    Log.w(Constants.mainLogTag, "ArmourService: Samsung-specific cleanup failed, using standard cleanup", e)
+                }
+            }
+            
+            Log.d(Constants.mainLogTag, "ArmourService: Notification cleanup completed")
+            
+        } catch (e: Exception) {
+            Log.e(Constants.mainLogTag, "ArmourService: Failed to clear notifications", e)
+        }
+    }
 
     override fun onBind(intent: Intent): IBinder? {
         return null;
@@ -324,15 +376,24 @@ class ArmourService : Service() {
             notificationIntent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP
             val pendingIntent = PendingIntent.getActivity(this, 0, notificationIntent, PendingIntent.FLAG_IMMUTABLE)
             
-            // Choose priority based on whether this is a silent update
-            val priority = if (isSilentUpdate) {
-                NotificationCompat.PRIORITY_LOW // Silent updates for usage end
+            // Choose appropriate channel and priority based on detection state
+            val (channelId, priority, shouldAlert) = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                when {
+                    activeDetections > 0 -> Triple("${Constants.CHANNEL_ID}_ALERT", NotificationCompat.PRIORITY_HIGH, !isSilentUpdate)
+                    else -> Triple("${Constants.CHANNEL_ID}_STATUS", NotificationCompat.PRIORITY_LOW, false) // Always silent for idle state
+                }
             } else {
-                if (activeDetections > 0) NotificationCompat.PRIORITY_HIGH else NotificationCompat.PRIORITY_DEFAULT
+                // For older Android versions, use original channel with appropriate priority
+                val legacyPriority = if (isSilentUpdate || activeDetections == 0) {
+                    NotificationCompat.PRIORITY_LOW
+                } else {
+                    if (activeDetections > 0) NotificationCompat.PRIORITY_HIGH else NotificationCompat.PRIORITY_DEFAULT
+                }
+                Triple(Constants.CHANNEL_ID, legacyPriority, !isSilentUpdate && activeDetections > 0)
             }
             
             val notification = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                NotificationCompat.Builder(this, Constants.CHANNEL_ID)
+                NotificationCompat.Builder(this, channelId)
                     .setContentTitle(title)
                     .setContentText(text)
                     .setSmallIcon(R.drawable.ic_launcher_background)
@@ -341,11 +402,12 @@ class ArmourService : Service() {
                     .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
                     .setOngoing(true)
                     .setAutoCancel(false)
-                    .setOnlyAlertOnce(isSilentUpdate) // Don't alert again for silent updates
-                    .setSilent(isSilentUpdate) // Make silent if it's an end event
+                    .setOnlyAlertOnce(!shouldAlert) // Don't alert for silent updates or idle states
+                    .setSilent(!shouldAlert) // Make silent if shouldn't alert
+                    .setGroup("armour_notifications") // Group to prevent spam
                     .build()
             } else {
-                NotificationCompat.Builder(this, Constants.CHANNEL_ID)
+                NotificationCompat.Builder(this, channelId)
                     .setContentTitle(title)
                     .setContentText(text)
                     .setSmallIcon(R.drawable.ic_launcher_background)
@@ -354,17 +416,20 @@ class ArmourService : Service() {
                     .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
                     .setOngoing(true)
                     .setAutoCancel(false)
-                    .setOnlyAlertOnce(isSilentUpdate) // Don't alert again for silent updates
+                    .setOnlyAlertOnce(!shouldAlert) // Don't alert for silent updates or idle states
+                    .setGroup("armour_notifications") // Group to prevent spam
                     .build()
             }
             
             // Update the notification
             notificationManager.notify(1, notification)
             
-            // If this is a high-priority notification (sensor detected), schedule priority reduction
-            if (!isSilentUpdate && activeDetections > 0) {
+            // Only schedule priority reduction for alert notifications (not status updates)
+            if (shouldAlert && activeDetections > 0 && Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 scheduleNotificationPriorityReduction(notificationManager, title, text, pendingIntent)
             }
+            
+            Log.d(Constants.mainLogTag, "ArmourService: Updated notification - Channel: $channelId, Priority: $priority, ShouldAlert: $shouldAlert, ActiveDetections: $activeDetections")
             
         } catch (e: Exception) {
             Log.e(Constants.mainLogTag, "ArmourService: Failed to update notification", e)
@@ -373,7 +438,7 @@ class ArmourService : Service() {
 
     /**
      * Schedule automatic reduction of notification priority after heads-up duration
-     * This makes the heads-up notification disappear while keeping status bar notification
+     * This transitions from alert channel to status channel to ensure heads-up disappears
      */
     private fun scheduleNotificationPriorityReduction(
         notificationManager: NotificationManager, 
@@ -386,45 +451,33 @@ class ArmourService : Service() {
         
         notificationTimeoutRunnable = Runnable {
             try {
-                // Create a lower priority version of the same notification
-                val notification = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                    NotificationCompat.Builder(this, Constants.CHANNEL_ID)
-                        .setContentTitle(title)
-                        .setContentText(text)
-                        .setSmallIcon(R.drawable.ic_launcher_background)
-                        .setContentIntent(pendingIntent)
-                        .setPriority(NotificationCompat.PRIORITY_DEFAULT) // Reduced from HIGH
-                        .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
-                        .setOngoing(true)
-                        .setAutoCancel(false)
-                        .setOnlyAlertOnce(true) // Don't alert again
-                        .setSilent(true) // Make it silent
-                        .build()
-                } else {
-                    NotificationCompat.Builder(this, Constants.CHANNEL_ID)
-                        .setContentTitle(title)
-                        .setContentText(text)
-                        .setSmallIcon(R.drawable.ic_launcher_background)
-                        .setContentIntent(pendingIntent)
-                        .setPriority(NotificationCompat.PRIORITY_DEFAULT) // Reduced from HIGH
-                        .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
-                        .setOngoing(true)
-                        .setAutoCancel(false)
-                        .setOnlyAlertOnce(true) // Don't alert again
-                        .build()
-                }
+                // Transition from alert channel to status channel to ensure heads-up disappears
+                // This is more effective than just changing priority on the same channel
+                val notification = NotificationCompat.Builder(this, "${Constants.CHANNEL_ID}_STATUS")
+                    .setContentTitle(title)
+                    .setContentText(text)
+                    .setSmallIcon(R.drawable.ic_launcher_background)
+                    .setContentIntent(pendingIntent)
+                    .setPriority(NotificationCompat.PRIORITY_LOW) // Use low priority in status channel
+                    .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
+                    .setOngoing(true)
+                    .setAutoCancel(false)
+                    .setOnlyAlertOnce(true) // Don't alert again
+                    .setSilent(true) // Make it completely silent
+                    .setGroup("armour_notifications")
+                    .build()
                 
-                // Update with lower priority notification
+                // Update with status channel notification
                 notificationManager.notify(1, notification)
-                Log.d(Constants.mainLogTag, "ArmourService: Reduced notification priority after ${HEADS_UP_DURATION_MS}ms")
+                Log.d(Constants.mainLogTag, "ArmourService: Transitioned to status channel after ${HEADS_UP_DURATION_MS}ms")
                 
             } catch (e: Exception) {
-                Log.e(Constants.mainLogTag, "ArmourService: Failed to reduce notification priority", e)
+                Log.e(Constants.mainLogTag, "ArmourService: Failed to transition notification channel", e)
             }
         }
         
-        // Schedule the priority reduction
+        // Schedule the channel transition
         notificationHandler.postDelayed(notificationTimeoutRunnable!!, HEADS_UP_DURATION_MS)
-        Log.d(Constants.mainLogTag, "ArmourService: Scheduled notification priority reduction in ${HEADS_UP_DURATION_MS}ms")
+        Log.d(Constants.mainLogTag, "ArmourService: Scheduled notification channel transition in ${HEADS_UP_DURATION_MS}ms")
     }
 }

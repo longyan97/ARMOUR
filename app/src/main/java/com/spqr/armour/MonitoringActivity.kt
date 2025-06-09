@@ -9,6 +9,8 @@ import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
 import android.os.Environment
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import android.view.View
 import android.widget.Button
@@ -239,6 +241,10 @@ class MonitoringActivity : AppCompatActivity() {
 
     fun stopRecordingService() {
         Log.d(Constants.mainLogTag, "Stop Recording Service Start ...")
+        
+        // Clear notifications before stopping service (Samsung S9 fix)
+        clearServiceNotifications()
+        
         val serviceIntent = Intent(this, ArmourService::class.java)
         stopService(serviceIntent)
         startStopButton.text = "Start Monitoring"
@@ -246,6 +252,37 @@ class MonitoringActivity : AppCompatActivity() {
         Toast.makeText(this, "Recording Ended: ${mTestName}", Toast.LENGTH_SHORT).show()
         
         Log.d(Constants.mainLogTag, "Stop Recording Service End")
+    }
+
+    /**
+     * Clear service notifications before stopping - Samsung device compatibility fix
+     */
+    private fun clearServiceNotifications() {
+        try {
+            val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+            
+            // Clear the specific notification ID used by ArmourService
+            notificationManager.cancel(1)
+            Log.d(Constants.mainLogTag, "MonitoringActivity: Cleared service notification ID 1")
+            
+            // Additional cleanup for Samsung devices
+            if (Build.MANUFACTURER.equals("samsung", ignoreCase = true) || 
+                Build.BRAND.equals("samsung", ignoreCase = true)) {
+                // Give a small delay to ensure the cancel operation is processed
+                Handler(Looper.getMainLooper()).postDelayed({
+                    try {
+                        // Double-check cleanup for Samsung devices
+                        notificationManager.cancel(1)
+                        Log.d(Constants.mainLogTag, "MonitoringActivity: Samsung device - performed additional notification cleanup")
+                    } catch (e: Exception) {
+                        Log.w(Constants.mainLogTag, "MonitoringActivity: Samsung additional cleanup failed", e)
+                    }
+                }, 100) // 100ms delay
+            }
+            
+        } catch (e: Exception) {
+            Log.e(Constants.mainLogTag, "MonitoringActivity: Failed to clear service notifications", e)
+        }
     }
 
     protected fun resetOutputDir(context: Context): String {
@@ -504,15 +541,16 @@ class MonitoringActivity : AppCompatActivity() {
                 maxY = maxOf(maxY, y)
                 minY = minOf(minY, y)
 
-                if (i % 2 == 0 && x - values[values.size - 2].x < Constants.RETESTING_THRESHOLD && y > threshold) {
-                    // Check for local peak
+                // Add boundary checks to prevent IndexOutOfBoundsException
+                if (i % 2 == 0 && values.size >= 2 && x - values[values.size - 2].x < Constants.RETESTING_THRESHOLD && y > threshold) {
+                    // Check for local peak - ensure we don't go out of bounds
                     if ((i - 2 < 1 || mEntries[i-2][0].toDouble() - y > Constants.THRESHOLD_BIAS) && (i + 1 >= mEntries.size || mEntries[i+1][0].toDouble() - y > Constants.THRESHOLD_BIAS)) {
                         // if the current value is a peak, mark it for retesting
                         Log.d(Constants.mainLogTag, "Retesting flag set for sensor: $sensorName at x: $x, y: $y last x: ${values[values.size - 2].x}, last y: ${values[values.size - 2].y}")
                         retestingFlag = true
                     }
-                    // Check for local peak
-                    else if ((i - 2 < 1 || y - mEntries[i-2][0].toDouble() > Constants.THRESHOLD_BIAS) && (i + 1 >= mEntries.size || y - mEntries[i+2][0].toDouble() > Constants.THRESHOLD_BIAS)) {
+                    // Check for local valley - fix boundary check for i+2 access
+                    else if ((i - 2 < 1 || y - mEntries[i-2][0].toDouble() > Constants.THRESHOLD_BIAS) && (i + 2 >= mEntries.size || y - mEntries[i+2][0].toDouble() > Constants.THRESHOLD_BIAS)) {
                         // if the current value is a valley, mark it for retesting
                         Log.d(Constants.mainLogTag, "Retesting flag set for sensor: $sensorName at x: $x, y: $y last x: ${values[values.size - 2].x}, last y: ${values[values.size - 2].y}")
                         retestingFlag = true
