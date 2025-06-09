@@ -26,12 +26,14 @@
             android:id="@+id/textViewTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:gravity="center"
             android:text="ARMOUR"
             android:textColor="@color/brand_color"
-            android:textSize="48sp"
+            android:textSize="56sp"
             android:autoSizeTextType="uniform"
             android:autoSizeMinTextSize="32sp"
-            android:autoSizeMaxTextSize="48sp"
+            android:autoSizeMaxTextSize="58sp"
             android:autoSizeStepGranularity="2sp"
             android:textStyle="bold"
             android:fontFamily="sans-serif-light"
@@ -44,13 +46,14 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Zero-permission Sensor Usage Monitor"
-            android:textColor="@color/subtitle_color"
+            android:textColor="@android:color/black"
             android:textSize="@dimen/text_lg"
             android:autoSizeTextType="uniform"
             android:autoSizeMinTextSize="12sp"
             android:autoSizeMaxTextSize="@dimen/text_lg"
             android:autoSizeStepGranularity="1sp"
             android:fontFamily="sans-serif"
+            android:textStyle="bold"
             android:letterSpacing="0.05" />
 
     </LinearLayout>
@@ -153,13 +156,13 @@
                     android:visibility="gone"
                     style="@style/ARMOUR.Button.Primary" />
 
-                <!-- Profiling Menu Button (Primary Blue) -->
+                <!-- Config Button (Primary Blue) - Renamed from "Configuration & Help" -->
                 <com.google.android.material.button.MaterialButton
-                    android:id="@+id/btnProfilingMenu"
+                    android:id="@+id/btnLogsOptions"
                     android:layout_width="match_parent"
                     android:layout_height="60dp"
                     android:layout_marginBottom="@dimen/spacing_lg"
-                    android:text="Profiling Menu"
+                    android:text="Configuration"
                     android:textSize="@dimen/button_font_size"
                     android:autoSizeTextType="uniform"
                     android:autoSizeMinTextSize="12sp"
@@ -175,12 +178,12 @@
                     app:cornerRadius="12dp"
                     style="@style/ARMOUR.Button.Primary" />
 
-                <!-- Config/Help Button (Primary Blue) -->
+                <!-- About ARMOUR Button (Primary Blue) - Moved from Config activity -->
                 <com.google.android.material.button.MaterialButton
-                    android:id="@+id/btnLogsOptions"
+                    android:id="@+id/btnAboutArmour"
                     android:layout_width="match_parent"
                     android:layout_height="60dp"
-                    android:text="Configuration &amp; Help"
+                    android:text="About ARMOUR"
                     android:textSize="@dimen/button_font_size"
                     android:autoSizeTextType="uniform"
                     android:autoSizeMinTextSize="12sp"

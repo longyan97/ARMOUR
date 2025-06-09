@@ -16,9 +16,9 @@ import java.io.File
 
 class ConfigActivity : AppCompatActivity() {
 
+    private lateinit var profilingMenuButton: Button
     private lateinit var clearStorageButton: Button
     private lateinit var setThresholdsButton: Button
-    private lateinit var aboutArmourButton: Button
 
     private lateinit var sensorConfigManager: SensorConfigManager
     private val thresholdBias: Double = 0.5
@@ -33,9 +33,9 @@ class ConfigActivity : AppCompatActivity() {
         
         setContentView(R.layout.activity_config)
         
+        profilingMenuButton = findViewById(R.id.btnProfilingMenu)
         clearStorageButton = findViewById(R.id.btnClearStorage)
         setThresholdsButton = findViewById(R.id.btnSetThresholds)
-        aboutArmourButton = findViewById(R.id.btnAboutArmour)
 
         // Initialize sensor config manager
         sensorConfigManager = SensorConfigManager.getInstance(this)
@@ -59,9 +59,9 @@ class ConfigActivity : AppCompatActivity() {
             }
         }
         
-        aboutArmourButton.setOnClickListener {
+        profilingMenuButton.setOnClickListener {
             KeyboardUtils.hideKeyboard(this)
-            showAboutArmourDialog()
+            showProfilingMenu()
         }
     }
     
@@ -172,50 +172,10 @@ class ConfigActivity : AppCompatActivity() {
     }
 
     /**
-     * Show About ARMOUR dialog with project and research links
+     * Show profiling menu - navigate to profiling activity
      */
-    private fun showAboutArmourDialog() {
-        val aboutMessage = """
-            📱 ARMOUR: Android Runtime Zero-permission Sensor Usage Monitoring
-            
-            ARMOUR is a research project that enables monitoring of zero-permission sensor usage by Android applications without requiring root access or special permissions.
-            
-            🔬 Research Paper:
-            "ARMOUR US: Android Runtime Zero-permission Sensor Usage Monitoring from User Space"
-            Published in WiSec 2025
-            
-            🌐 Project Resources:
-            
-            • GitHub Repository: Source code and documentation
-            • Research Paper: Full academic paper with technical details
-            
-            Click the buttons below to access these resources.
-        """.trimIndent()
-        
-        AlertDialog.Builder(this)
-            .setTitle("About ARMOUR")
-            .setMessage(aboutMessage)
-            .setPositiveButton("GitHub Project") { _, _ ->
-                openUrl("https://github.com/longyan97/ARMOUR")
-            }
-            .setNegativeButton("Research Paper") { _, _ ->
-                openUrl("https://yanlong.site/files/wisec25-armour.pdf")
-            }
-            .setNeutralButton("Close", null)
-            .setIcon(android.R.drawable.ic_dialog_info)
-            .show()
-    }
-    
-    /**
-     * Open URL in browser
-     */
-    private fun openUrl(url: String) {
-        try {
-            val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
-            startActivity(intent)
-        } catch (e: Exception) {
-            Log.e(TAG, "Error opening URL: $url", e)
-            Toast.makeText(this, "Unable to open link. Please visit: $url", Toast.LENGTH_LONG).show()
-        }
+    private fun showProfilingMenu() {
+        val intent = Intent(this, ProfilingActivity::class.java)
+        startActivity(intent)
     }
 } 

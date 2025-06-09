@@ -13,8 +13,8 @@ class MainActivity : AppCompatActivity() {
     private lateinit var startServiceEasyButton: Button
     private lateinit var startServiceV2Button: Button
     private lateinit var startServiceButton: Button
-    private lateinit var profilingMenuButton: Button
     private lateinit var configLogButton: Button
+    private lateinit var aboutArmourButton: Button
     
     private lateinit var sensorConfigManager: SensorConfigManager
 
@@ -33,8 +33,8 @@ class MainActivity : AppCompatActivity() {
         startServiceEasyButton = findViewById(R.id.btnStartServiceEasy)
         startServiceV2Button = findViewById(R.id.btnStartServiceV2)
         startServiceButton = findViewById(R.id.btnStartService)
-        profilingMenuButton = findViewById(R.id.btnProfilingMenu)
         configLogButton = findViewById(R.id.btnLogsOptions)
+        aboutArmourButton = findViewById(R.id.btnAboutArmour)
         
         // Set up click listeners
         startServiceEasyButton.setOnClickListener {
@@ -63,14 +63,6 @@ class MainActivity : AppCompatActivity() {
 //            startActivity(intent)
         }
         
-        profilingMenuButton.setOnClickListener {
-            // Hide keyboard
-            KeyboardUtils.hideKeyboard(this)
-            // Launch profiling activity
-            val intent = Intent(this, ProfilingActivity::class.java)
-            startActivity(intent)
-        }
-        
         configLogButton.setOnClickListener {
             if (checkValidGlobalSettings()) {
                 // Hide keyboard
@@ -79,6 +71,14 @@ class MainActivity : AppCompatActivity() {
                 val intent = Intent(this, ConfigActivity::class.java)
                 startActivity(intent)
             }
+        }
+        
+        aboutArmourButton.setOnClickListener {
+            // Hide keyboard
+            KeyboardUtils.hideKeyboard(this)
+            // Launch about activity
+            val intent = Intent(this, ArmourAboutActivity::class.java)
+            startActivity(intent)
         }
         
         // Perform self-check for global settings on first startup

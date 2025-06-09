@@ -59,6 +59,10 @@
             android:name=".ConfigActivity"
             android:exported="false"
             android:parentActivityName=".MainActivity" />
+        <activity
+            android:name=".ArmourAboutActivity"
+            android:exported="false"
+            android:parentActivityName=".MainActivity" />
     </application>
 
 </manifest>

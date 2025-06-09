@@ -71,13 +71,13 @@
                 android:orientation="vertical"
                 android:padding="@dimen/spacing_lg">
 
-                <!-- Clear Storage Button (Primary - Now Blue) -->
+                <!-- Profiling Menu Button (Primary - Moved from Main Activity) -->
                 <com.google.android.material.button.MaterialButton
-                    android:id="@+id/btnClearStorage"
+                    android:id="@+id/btnProfilingMenu"
                     android:layout_width="match_parent"
                     android:layout_height="60dp"
                     android:layout_marginBottom="@dimen/spacing_lg"
-                    android:text="Clear Storage"
+                    android:text="Profiling Menu"
                     android:textSize="@dimen/button_font_size"
                     android:autoSizeTextType="uniform"
                     android:autoSizeMinTextSize="12sp"
@@ -113,12 +113,12 @@
                     app:cornerRadius="12dp"
                     style="@style/ARMOUR.Button.Primary" />
 
-                <!-- About ARMOUR Button (Primary) -->
+                <!-- Clear Storage Button (Primary - Now Blue) -->
                 <com.google.android.material.button.MaterialButton
-                    android:id="@+id/btnAboutArmour"
+                    android:id="@+id/btnClearStorage"
                     android:layout_width="match_parent"
                     android:layout_height="60dp"
-                    android:text="About ARMOUR App &amp; Research"
+                    android:text="Clear Storage"
                     android:textSize="@dimen/button_font_size"
                     android:autoSizeTextType="uniform"
                     android:autoSizeMinTextSize="12sp"

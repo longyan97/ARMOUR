@@ -86,8 +86,8 @@
     <dimen name="line_height_large">28sp</dimen>
 
     <!-- Slogan Text Sizes -->
-    <dimen name="slogan_part1_text">20sp</dimen>      <!-- "They've been" - single line -->
-    <dimen name="slogan_part2_text">22sp</dimen>      <!-- "Now it's time" - two lines -->
+    <dimen name="slogan_part1_text">16sp</dimen>      <!-- "They've been" - single line -->
+    <dimen name="slogan_part2_text">18sp</dimen>      <!-- "Now it's time" - two lines -->
     <dimen name="slogan_text_min">8sp</dimen>         <!-- Minimum size -->
 
 </resources>

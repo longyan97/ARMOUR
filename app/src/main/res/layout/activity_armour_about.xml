@@ -1,0 +1,221 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/activity_background"
+    android:fillViewport="true"
+    tools:context=".ArmourAboutActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="@dimen/spacing_border">
+
+
+
+        <!-- Content Card -->
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/spacing_xl"
+            style="@style/ARMOUR.CardView">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="@dimen/spacing_2xl">
+
+                <!-- Overview & Motivation Section -->
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="📱 Overview &amp; Motivation"
+                    android:textSize="@dimen/text_lg"
+                    android:textColor="@color/font_color"
+                    android:fontFamily="sans-serif-medium"
+                    android:layout_marginBottom="@dimen/spacing_md" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="ARMOUR is a lightweight Android privacy-enhancement tool for detecting undeclared zero-permission sensor access by third-party apps at runtime, directly from user space—no root, no permissions required."
+                    android:textSize="@dimen/size_component_content"
+                    android:textColor="@color/font_color"
+                    android:fontFamily="sans-serif"
+                    android:lineSpacingExtra="4dp"
+                    android:layout_marginBottom="@dimen/spacing_md" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Android's zero-permission sensors such as accelerometer, gyroscope, and magnetometer can be accessed by third-party applications without any user consent or notifications. ARMOUR helps restore sensor data usage transparency by allowing users and researchers to monitor when, which, and at what sampling rates the zero-permission sensors are accessed."
+                    android:textSize="@dimen/size_component_content"
+                    android:textColor="@color/font_color"
+                    android:fontFamily="sans-serif"
+                    android:lineSpacingExtra="4dp"
+                    android:layout_marginBottom="@dimen/spacing_xl" />
+
+                <!-- Usage Section -->
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="🔬 Usage"
+                    android:textSize="@dimen/text_lg"
+                    android:textColor="@color/font_color"
+                    android:fontFamily="sans-serif-medium"
+                    android:layout_marginBottom="@dimen/spacing_md" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Step 1: Device Profiling\nRun ARMOUR in profiling mode to determine the minimum supported sampling rates for each sensor on your device. This calibration ensures accurate detection thresholds."
+                    android:textSize="@dimen/size_component_content"
+                    android:textColor="@color/font_color"
+                    android:fontFamily="sans-serif"
+                    android:lineSpacingExtra="4dp"
+                    android:layout_marginBottom="@dimen/spacing_md" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Step 2: Monitoring\nKeep ARMOUR running in the background. Launch the third-party app you want to analyze. ARMOUR will log changes in instant sampling rates."
+                    android:textSize="@dimen/size_component_content"
+                    android:textColor="@color/font_color"
+                    android:fontFamily="sans-serif"
+                    android:lineSpacingExtra="4dp"
+                    android:layout_marginBottom="@dimen/spacing_md" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Step 3: Analyze Results\nCollected data is stored locally on the device. Use ARMOUR's built-in log viewer or export logs to a PC for offline analysis."
+                    android:textSize="@dimen/size_component_content"
+                    android:textColor="@color/font_color"
+                    android:fontFamily="sans-serif"
+                    android:lineSpacingExtra="4dp"
+                    android:layout_marginBottom="@dimen/spacing_xl" />
+
+                <!-- Findings Section -->
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="📊 Findings"
+                    android:textSize="@dimen/text_lg"
+                    android:textColor="@color/font_color"
+                    android:fontFamily="sans-serif-medium"
+                    android:layout_marginBottom="@dimen/spacing_md" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Using ARMOUR, we examined more than 1,400 Google Play applications of 35 different categories. Key findings include:"
+                    android:textSize="@dimen/size_component_content"
+                    android:textColor="@color/font_color"
+                    android:fontFamily="sans-serif"
+                    android:lineSpacingExtra="4dp"
+                    android:layout_marginBottom="@dimen/spacing_md" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="• Zero-permission sensor data is being used by marketing services for user/device tracking\n• >40% of zero-permission sensor usage in 14 categories\n• ~50% of Books/Reference apps using all three sensors\n• ~0% of apps declared the reason for zero-permission sensor access\n• Some apps keep accessing sensors even after being terminated by users"
+                    android:textSize="@dimen/size_component_content"
+                    android:textColor="@color/font_color"
+                    android:fontFamily="sans-serif"
+                    android:lineSpacingExtra="4dp"
+                    android:layout_marginBottom="@dimen/spacing_xl" />
+
+
+
+            </LinearLayout>
+
+        </androidx.cardview.widget.CardView>
+
+        <!-- Action Buttons Card -->
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/spacing_xl"
+            style="@style/ARMOUR.CardView">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="@dimen/spacing_2xl">
+
+                <!-- Resources Section -->
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="🌐 Project Resources"
+                    android:textSize="@dimen/text_lg"
+                    android:textColor="@color/font_color"
+                    android:fontFamily="sans-serif-medium"
+                    android:layout_marginBottom="@dimen/spacing_lg" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Access the source code, documentation, and full academic paper with technical details."
+                    android:textSize="@dimen/size_component_content"
+                    android:textColor="@color/font_color"
+                    android:fontFamily="sans-serif"
+                    android:lineSpacingExtra="4dp"
+                    android:layout_marginBottom="@dimen/spacing_xl" />
+
+                <!-- GitHub Project Button -->
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnGithubProject"
+                    android:layout_width="match_parent"
+                    android:layout_height="60dp"
+                    android:layout_marginBottom="@dimen/spacing_lg"
+                    android:text="📂 GitHub Project"
+                    android:textSize="@dimen/button_font_size"
+                    android:textColor="@color/button_text_primary"
+                    android:textAllCaps="false"
+                    android:fontFamily="sans-serif-medium"
+                    app:backgroundTint="@color/button_primary"
+                    app:cornerRadius="12dp"
+                    style="@style/ARMOUR.Button.Primary" />
+
+                <!-- Research Paper Button -->
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnResearchPaper"
+                    android:layout_width="match_parent"
+                    android:layout_height="60dp"
+                    android:layout_marginBottom="@dimen/spacing_lg"
+                    android:text="📄 Research Paper"
+                    android:textSize="@dimen/button_font_size"
+                    android:textColor="@color/button_text_primary"
+                    android:textAllCaps="false"
+                    android:fontFamily="sans-serif-medium"
+                    app:backgroundTint="@color/button_primary"
+                    app:cornerRadius="12dp"
+                    style="@style/ARMOUR.Button.Primary" />
+
+                <!-- Back Button -->
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnBack"
+                    android:layout_width="match_parent"
+                    android:layout_height="60dp"
+                    android:text="← Back"
+                    android:textSize="@dimen/button_font_size"
+                    android:textColor="@color/button_text_secondary"
+                    android:textAllCaps="false"
+                    android:fontFamily="sans-serif-medium"
+                    app:backgroundTint="@color/button_secondary"
+                    app:cornerRadius="12dp"
+                    style="@style/ARMOUR.Button.Secondary" />
+
+            </LinearLayout>
+
+        </androidx.cardview.widget.CardView>
+
+    </LinearLayout>
+
+</ScrollView> 
